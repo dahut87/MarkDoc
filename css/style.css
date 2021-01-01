@@ -1,0 +1,158 @@
+.navbar-custom {
+    background-color: #ff5500;
+}
+/* change the brand and text color */
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text {
+    color: rgba(255,255,255,.8);
+}
+/* change the link color */
+.navbar-custom .navbar-nav .nav-link {
+    color: rgba(255,255,255,.5);
+}
+/* change the color of active or hovered links */
+.navbar-custom .nav-item.active .nav-link,
+.navbar-custom .nav-item:hover .nav-link {
+    color: #ffffff;
+}
+
+blockquote
+{
+  font-style: normal;
+  font-size: 16px;
+  margin-left: 32px;
+  font-family: Consolas, "Times New Roman", Verdana;
+  border-left: 4px solid #CCC;
+  padding-left: 8px;
+    background: #eee;
+}
+
+span.emoji-sizer
+{
+line-height: 0.81em;
+font-size: 2em;
+margin: -9px 0;
+}
+
+pre{
+    background: #eee;
+}
+
+h1{
+	font-weight: bold;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 25px;
+    z-index: 25;
+}
+
+.found {
+	font-weight: bold;
+	color: red;
+}
+
+.filefound {
+	font-weight: bold;
+  	font-size: 19px;
+}
+
+.textfound {
+	font-weight: normal;
+	color: grey;
+  	font-size: 14px;	
+	width: 50%;
+}
+
+.letter {
+	font-weight: bold;
+  	font-size: 22px;	
+}
+
+.file {
+	font-weight: bold;
+	color: grey;
+}
+
+.fileletter {
+	font-weight: bold;
+	color: grey;
+  	font-size: 14px;
+}
+
+.particularite {
+    background-color: #17a2b8;
+    border-radius: 5px;
+}
+
+.particularite>a {
+    color: white;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.particularite>a:hover {
+    color: red;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-decoration: none;
+}
+
+.contained {
+    border: solid 1px;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 2px;
+}
+
+.flexalign
+{
+display:flex;
+align-items: left;
+}
+.flexwrap
+{
+justify-content:left;
+flex-wrap: wrap;
+}
+
+.imagepreview
+{
+    max-width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 1px solid #ddd;
+    text-align: center;
+    padding: 7px;
+   display:block;
+   margin:auto;
+}
+
+.alert {
+    display: none;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.imagepreview img
+{
+   max-width: 100%;
+   height: auto;
+   min-height: 150px;
+}
+
+.imagepreview:hover
+{
+	opacity: 0.7;
+}
+
+#content > p > img
+{
+    max-width: 100%;
+}
