@@ -21,6 +21,7 @@ define('LOG_DIR', HOST_DIR.LOG_FILE);
 define('HISTORY_DIR', HOST_DIR.HISTORY_FILE);
 include LIB_DIR."/Parsedown.php";
 include LIB_DIR."/ParsedownExtra.php";
+include LIB_DIR."/ParsedownExtraPlus.php";
 include LIB_DIR."/functions.php";
 
 ### Security

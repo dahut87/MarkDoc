@@ -1081,11 +1081,6 @@ class Parsedown
                     continue;
                 }
 
-		    if (isset($Inline['addon']))
-                {
-			  $markup .= $Inline['addon'];
-                }
-
                 # makes sure that the inline belongs to "our" marker
 
                 if (isset($Inline['position']) and $Inline['position'] > $markerPosition)
@@ -1114,8 +1109,7 @@ class Parsedown
                 $markup .= $this->unmarkedText($unmarkedText);
 
                 # compile the inline
-                if (isset($Inline['element']))
-                	$markup .= isset($Inline['markup']) ? $Inline['markup'] : $this->element($Inline['element']);
+                $markup .= isset($Inline['markup']) ? $Inline['markup'] : $this->element($Inline['element']);
 
                 # remove the examined text
                 $text = substr($text, $Inline['position'] + $Inline['extent']);
@@ -1254,19 +1248,6 @@ class Parsedown
             ),
         );
 
-        $modifier = explode('?', $Inline['element']['attributes']['src'], 2)[1] ?? "";
-        list($size,$align) = explode('-', $modifier, 2);
-	  $width = $height = 0;
-        if (preg_match('/^\d+x\d+$/', $size)) {
-            list($width, $height) = explode('x', $size);
-	  }
-        if (preg_match('/^\d+$/', $size)) {
-            $width = $size;
-	  }
-        if($width > 0) $Inline['element']['attributes']['width'] = $width;
-        if($height > 0) $Inline['element']['attributes']['height'] = $height;
-        if($align !="" ) $Inline['element']['attributes']['align'] = $align;
-
         $Inline['element']['attributes'] += $Link['element']['attributes'];
 
         unset($Inline['element']['attributes']['href']);
@@ -1339,20 +1320,6 @@ class Parsedown
             $Element['attributes']['href'] = $Definition['url'];
             $Element['attributes']['title'] = $Definition['title'];
         }
-	  if ($Element['attributes']['href']=="tags")
-	  {
-		$addon='<div class="flexalign flexwrap">';
-            $items=explode(" ",$Element['text']);
-		foreach($items as $item)
-		{
-			$addon.='<span class="flexalign contained particularite"><a href="javascript:search(\''.$item.'\')">'.$item.'</a></span>';
-		}
-		$addon.='</div>';
-            return array(
-            'addon' => $addon,
-            'extent' => $extent
-            );
-	  }
 
         return array(
             'extent' => $extent,

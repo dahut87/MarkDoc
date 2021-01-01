@@ -1,6 +1,6 @@
 # MarkDoc
 
-PHP MarkDown document manager, Free &amp; OpenSource :heart_eyes: for easily create your documentation website**
+**PHP MarkDown document manager, Free &amp; OpenSource :heart_eyes: for easily create your documentation website**
 ```
   __  __            _    _____             
  |  \/  |          | |  |  __ \            

@@ -69,7 +69,7 @@ function specialurl($url)
 Based on Pheditor "PHP file editor" By Hamid Samak Release under MIT license
 
 2020 par Nicolas H.';
- 	 	$extra = new ParsedownExtra();
+ 	 	$extra = new ParsedownExtraplus();
 		print($extra->text($content));
 		exit;
         case ':ADMIN':
@@ -239,7 +239,7 @@ function getcontent($url,$md=true)
    }
    if ($md==true)
    {
-   	 $extra = new ParsedownExtra();
+   	 $extra = new ParsedownExtraplus();
   	 return $extra->text($content);
    }
    else

@@ -143,9 +143,11 @@ $(function(){
 
 
     $("#save").click(function(e){
-        e.preventDefault();
-   	  file="/"+$("#files").jstree("get_path",nodes.node,"/").replace(/^.+?[/]/, '');
-	 if ($("#files").jstree("is_leaf",nodes.node))
+		e.preventDefault();
+		viewfile="";
+	node=$("#files").jstree("get_selected");
+   	  file="/"+$("#files").jstree("get_path",node,"/").replace(/^.+?[/]/, '');
+	 if ($("#files").jstree("is_leaf",node))
 	  {
 	  data = editor.value();
 	  $.ajax({
