@@ -1,4 +1,14 @@
 <?php
+/*
+
+ * MarkDoc
+ * PHP MarkDown document manager
+ * Hordé Nicolas
+ * https://github.com/dahut87/MarkDoc
+ * Release under GPLv3.0 license
+ * Base on Pheditor "PHP file editor" By Hamid Samak Release under MIT license
+ */
+
 function testip()
 {
 	if (empty(ACCESS_IP) === false && ACCESS_IP != $_SERVER['REMOTE_ADDR'])
@@ -42,7 +52,7 @@ function specialurl($url)
 {
 	switch ($url) {
         case ':APROPOS':
-            $content = '# MarkDoc ?!
+            $content = '# MarkDoc
 
 **PHP MarkDown document manager, Free &amp; OpenSource :heart_eyes: for easily create your documentation website**
 ```

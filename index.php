@@ -1,4 +1,6 @@
+<?php
 /*
+
  * MarkDoc
  * PHP MarkDown document manager
  * Hordé Nicolas
@@ -7,7 +9,6 @@
  * Base on Pheditor "PHP file editor" By Hamid Samak Release under MIT license
  */
 
-<?php
 ### Global defines
 define('ROOT_DIR', realpath(dirname(__FILE__)) .'/');
 define('LIB_DIR', ROOT_DIR.'lib/');
