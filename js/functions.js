@@ -28,15 +28,18 @@ $(function(){
                        } 
 	    }
 	});
-      emoji = new EmojiConvertor();
+	  emoji = new EmojiConvertor();
+	  $("#content").html(emoji.replace_colons($("#content").html()));
 	$("#editor").hide();
 	$("#image").hide();
 	$("#save").hide();
+	setTimeout(function(){ $("#forkongithub").fadeOut(1500); }, 5000);
+	$("#toc").tocify();
 
 	$("#files").on("select_node.jstree", function (e, nodes) { 
    		file="/"+$("#files").jstree("get_path",nodes.node,"/").replace(/^.+?[/]/, '');
 		if ($("#files").jstree("is_leaf",nodes.node))
-			openlink(file+".md");
+			openlink(file+".md",false);
 	});
 
 	$("input[name=submit]").click(function(e) {
@@ -47,21 +50,22 @@ $(function(){
 	majlink('head');
 });
 
-function openlink(dest)
+function openlink(dest,majtree)
 {
 	$.ajax({
 	  type: "POST",
 	  url: "/index.php",
 	  data: { action: "open", file: encodeURIComponent(dest) },
 	  success: function(data){
-	 	$("#content").html(emoji.replace_colons(data)+'<br><br>');
+	 	$("#content").html(emoji.replace_colons(data));
 		Prism.highlightAll();
 		majlink('content');
 		$(window).scrollTop(0);
+		if (majtree) searchtree(dest);
 	  },
 	  error: function(XMLHttpRequest, textStatus, errorThrown) {
 		if (dest!="special/404.md")
-	    		openlink("special/404.md");
+	    		openlink("special/404.md",false);
 		else
 			$("#content").html("<b>Erreur 404 sur erreur 404: pas de /special/404.md !");
 	  }
@@ -83,8 +87,37 @@ function majlink(context)
 		if (!external.test(dest) && !javascript.test(dest)) 
 		{
 			e.preventDefault();
-			openlink(dest);
+			openlink(dest,true);
 		}
+	});
+}
+
+function searchtree(file)
+{
+	var flag;
+	$("#files").jstree("deselect_all");
+	node=$("#files").jstree("get_node", "ul > li:first");
+	file.split('/').forEach(function (item) {
+		flag=false;
+		subnodes=$("#files").jstree("get_children_dom",node);
+		subnodes.each(function (i,subnode)
+		{
+			text=$("#files").jstree("get_text",subnode);
+			if ((text==item) || (text+".md"==item))
+			{
+				$("#files").jstree("open_node",subnode);
+				if ($("#files").jstree("is_leaf",subnode))
+				{
+					$("#files").jstree("select_node",subnode,true);
+					flag=false;
+					return false;
+				}
+				node=subnode;
+				flag=true;
+				return false;
+			}
+		});
+		if (!flag) return false;
 	});
 }
 
@@ -96,14 +129,14 @@ function search(arg)
 	  url: "/index.php",
 	  data: { action: "search", search: encodeURIComponent(arg), type: "js" },
 	  success: function(data){
-      	$("#content").html(data+'<br><br>');
+      	$("#content").html(data);
 		Prism.highlightAll();
 		majlink('content');
 		$(window).scrollTop(0);
 	  },
 	  error: function(XMLHttpRequest, textStatus, errorThrown) {
 		if (dest!="special/404.md")
-	    		openlink("special/404.md");
+	    		openlink("special/404.md",false);
 		else
 			$("#content").html("<b>Erreur 404 sur erreur 404: pas de /special/404.md !");
 	  }

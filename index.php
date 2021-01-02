@@ -29,7 +29,7 @@ testip();
 logprotect();
 
 ### Sessions
-session_name('mesdocumentations');
+session_name($_SERVER['SERVER_NAME']);
 session_start();
 
 /*var_dump($_POST);
@@ -148,19 +148,11 @@ else
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
 <link rel="stylesheet" type="text/css" href="/css/style.css" />
 <?php print(($_SESSION['md_admin'] == true)?'<link rel="stylesheet" href="/css/codemirror.min.css" />':''); ?>
-<script type="text/javascript" src="/js/jquery.min.js"></script>
-<script type="text/javascript" src="/js/popper.min.js"></script>
-<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/js/jstree.min.js"></script>
-<script type="text/javascript" src="/js/prism.js"></script>
-<script type="text/javascript" src="/js/emoji.min.js"></script>
-<?php print(($_SESSION['md_admin'] == true)?'<link rel="stylesheet" href="/css/simplemde.min.css">
-<script src="/js/simplemde.min.js"></script>
-<script type="text/javascript" src="/js/functionsadmin.js"></script>':'<script type="text/javascript" src="/js/functions.js"></script>'); ?>
 </head>
 <body>
    <div id="head" class="">
-      <nav class="navbar navbar-expand-md <?php print(($_SESSION['md_admin'] == true)?"navbar-custom":"bg-dark navbar-dark"); ?>">
+   <span id="forkongithub"><a href="https://github.com/dahut87/MarkDoc">Fork me on GitHub</a></span>
+      <nav class="navbar fixed-top navbar-expand-md <?php print(($_SESSION['md_admin'] == true)?"navbar-custom":"bg-dark navbar-dark"); ?>">
         <a class="navbar-brand" href="/index.md"><i class="fas <?php echo ICON; ?>"></i>&nbsp;<?php echo TITLE; ?></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -207,6 +199,7 @@ print(($_SESSION['md_admin'] == true)?'<li class="nav-item dropdown">
 	print($content);
 ?><br><br>
 </div>
+<div id="toc"></div>
 <div id="image" class="imagepreview"><img></div><div id="editor"><textarea data-file="" class="form-control"></textarea></div>
 </div>
 </div>
@@ -218,5 +211,14 @@ print(($_SESSION['md_admin'] == true)?'<li class="nav-item dropdown">
 ?>
 </div>
 <div class="alert"></div>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/popper.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/jstree.min.js"></script>
+<script type="text/javascript" src="/js/prism.js"></script>
+<script type="text/javascript" src="/js/emoji.min.js"></script>
+<?php print(($_SESSION['md_admin'] == true)?'<link rel="stylesheet" href="/css/simplemde.min.css">
+<script src="/js/simplemde.min.js"></script>
+<script type="text/javascript" src="/js/functionsadmin.js"></script>':'<script type="text/javascript" src="/js/functions.js"></script>'); ?>
 </body>
 </html>

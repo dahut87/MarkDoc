@@ -16,6 +16,68 @@
     color: #ffffff;
 }
 
+body {
+    min-height: 10rem;
+    padding-top: 55px;
+  }  
+
+#forkongithub a{
+    box-sizing: content-box;
+    background:#000;
+    color:#fff;
+    text-decoration:none;
+    font-family:arial,sans-serif;
+    text-align:center;
+    font-weight:bold;
+    padding:5px 40px;
+    font-size:1rem;
+    line-height:2rem;
+    position:relative;
+    transition:0.5s;
+}
+#forkongithub a:hover{
+    background:#c11;
+    color:#fff;
+}
+#forkongithub a::before,#forkongithub a::after{
+    content:"";
+    width:100%;
+    display:block;
+    position:absolute;
+    top:1px;
+    left:0;
+    height:1px;
+    background:#fff;
+}
+#forkongithub a::after{
+    bottom:1px;
+    top:auto;
+}
+@media screen and (min-width:800px){
+    #forkongithub{
+        position:absolute;
+        display:block;
+        top:0;
+        right:0;
+        width:200px;
+        overflow:hidden;
+        height:200px;
+        z-index:9999;
+    }
+    #forkongithub a{
+        width:200px;
+        position:fixed;
+        top:60px;
+        right:-60px;
+        transform:rotate(45deg);
+        -webkit-transform:rotate(45deg);
+        -ms-transform:rotate(45deg);
+        -moz-transform:rotate(45deg);
+        -o-transform:rotate(45deg);
+        box-shadow:4px 4px 10px rgba(0,0,0,0.8);
+    }
+}
+
 blockquote
 {
   font-style: normal;
@@ -24,7 +86,7 @@ blockquote
   font-family: Consolas, "Times New Roman", Verdana;
   border-left: 4px solid #CCC;
   padding-left: 8px;
-    background: #eee;
+background: #eee;
 }
 
 span.emoji-sizer
@@ -155,4 +217,9 @@ flex-wrap: wrap;
 #content > p > img
 {
     max-width: 100%;
+}
+#content
+{
+    padding-bottom: 25px;
+    padding-top: 10px;
 }

@@ -109,6 +109,8 @@ $(function(){
 	$("#editor").hide();
 	$("#image").hide();
 	$("#save").hide();
+	$("#content").html(emoji.replace_colons($("#content").html()));
+	setTimeout(function(){ $("#forkongithub").fadeOut(1500); }, 5000);
 
 	$("#files").on("ready.jstree", function (e) { 
 		const urlParams = new URLSearchParams(window.location.search);
@@ -266,7 +268,7 @@ function imagemode(dest)
 function viewmode(data)
 {
       if (data !== undefined) {
-		$("#content").html(emoji.replace_colons(data)+'<br><br>');
+		$("#content").html(emoji.replace_colons(data));
 		Prism.highlightAll();
 	}
 	majlink('content');
