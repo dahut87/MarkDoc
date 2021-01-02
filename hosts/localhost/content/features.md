@@ -9,6 +9,7 @@
 3. Integrated Image viewer
 4. Restricted access by ip address
 5. Admin access logging
+6. Table of contents
 
 ## Planned
 

@@ -34,7 +34,8 @@ $(function(){
 	$("#image").hide();
 	$("#save").hide();
 	setTimeout(function(){ $("#forkongithub").fadeOut(1500); }, 5000);
-	$("#toc").tocify();
+	$('#content > p>  img').magnifik({ratio:1.0});
+	tocgenerate();
 
 	$("#files").on("select_node.jstree", function (e, nodes) { 
    		file="/"+$("#files").jstree("get_path",nodes.node,"/").replace(/^.+?[/]/, '');
@@ -45,6 +46,11 @@ $(function(){
 	$("input[name=submit]").click(function(e) {
 		e.preventDefault();
 		search($("#search").val());
+	});
+
+	$("input[name=toc]").click(function(e) {
+		e.preventDefault();
+		tocshow();
 	});
 
 	majlink('head');
@@ -62,6 +68,8 @@ function openlink(dest,majtree)
 		majlink('content');
 		$(window).scrollTop(0);
 		if (majtree) searchtree(dest);
+		$('#content > p>  img').magnifik({ratio:1.00});
+		tocgenerate();
 	  },
 	  error: function(XMLHttpRequest, textStatus, errorThrown) {
 		if (dest!="special/404.md")
@@ -70,6 +78,32 @@ function openlink(dest,majtree)
 			$("#content").html("<b>Erreur 404 sur erreur 404: pas de /special/404.md !");
 	  }
 	});
+}
+
+function tocgenerate()
+{
+	tocshow();
+	$('.toc').toc({
+		'selectors': 'h2,h3,h4',
+		'container': '#content'
+	})
+	$('.toc').append('<i class="fa fa-2x fa-caret-up" aria-hidden="true"></i>');
+	$('.toc > i').off().hover(function(e) {
+		e.preventDefault();
+		tochide();
+	});
+}
+
+function tochide()
+{
+	$('.toc').slideUp()
+	$('#toc').show();
+}
+
+function tocshow()
+{
+	$('.toc').slideDown()
+	$('#toc').hide();
 }
 
 function alertBox(message, className) {
@@ -133,6 +167,7 @@ function search(arg)
 		Prism.highlightAll();
 		majlink('content');
 		$(window).scrollTop(0);
+		tocgenerate();
 	  },
 	  error: function(XMLHttpRequest, textStatus, errorThrown) {
 		if (dest!="special/404.md")

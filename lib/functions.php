@@ -178,15 +178,21 @@ function searchstr($path, $string){
     return array('files' => $files, 'totalFiles' => $totalFiles);
 }
 
+function loadlang($language)
+{
+    global $LANG;
+    $LANG=json_decode(file_get_contents(ROOT_DIR."lang/".$language.".json"),true);
+}
+
 function history($file)
 {
     if (is_numeric(MAX_HISTORY_FILES) && MAX_HISTORY_FILES > 0) {
-        $file_dir = dirname($file);
+        $file_dir = str_replace(CONTENT_DIR,"",dirname($file)."/");
         $file_name = basename($file);
-        $file_history_dir = HISTORY_DIR . '/' . str_replace(MAIN_DIR, '', $file_dir);
+        $file_history_dir = HISTORY_DIR . $file_dir;
         foreach ([HISTORY_DIR, $file_history_dir] as $dir) {
             if (file_exists($dir) === false || is_dir($dir) === false) {
-                mkdir($dir);
+                mkdir($dir,0755,true);
             }
         }
         $history_files = scandir($file_history_dir);
@@ -199,14 +205,15 @@ function history($file)
         if (count($history_files) >= MAX_HISTORY_FILES) {
             foreach ($history_files as $key => $history_file) {
                 if ($key < 1) {
-                    unlink($file_history_dir . DS . $history_file);
+                    unlink($file_history_dir . '/' . $history_file);
                     unset($history_files[$key]);
                 } else {
-                    rename($file_history_dir . DS . $history_file, $file_history_dir . DS . $file_name . '.' . ($key - 1));
+                    $newfile_name=pathinfo(basename($history_file))['filename'];
+                    rename($file_history_dir . '/' . $history_file, $file_history_dir . '/' . $newfile_name . '.' . ($key - 1));
                 }
             }
         }
-        copy($file, $file_history_dir . DS . $file_name . '.' . count($history_files));
+        copy($file, $file_history_dir . '/' . $file_name . '.' . count($history_files));
     }
 }
 
@@ -222,7 +229,7 @@ function setcontent($url,$data)
 	else if (is_writable($file))
 	{
             file_put_contents($file, $data);
-		//history($file);
+		    history($file);
             $content='success|Fichier enregistré.';
 	}
 	else if (!is_writable($file))

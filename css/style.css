@@ -78,6 +78,38 @@ body {
     }
 }
 
+.toc
+{
+    margin-top: 56px;
+    left:auto;
+    background: #eee;
+    width: 20%;
+    border: 1px solid #ddd;
+    color: #333;
+}
+.toc > ul
+{
+    list-style-type: none;
+    margin: 8px;
+    padding: 0px;
+}
+.toc a {
+    color: #333;
+}
+.toc .toc-h3 {
+    margin-left: 10px
+}
+.toc .toc-h4 {
+    margin-left: 20px
+}
+.toc-active {
+    color: #000;
+    font-weight: bold;
+}
+.toc.right {
+    right: 0
+}
+
 blockquote
 {
   font-style: normal;
@@ -197,9 +229,12 @@ flex-wrap: wrap;
 .alert {
     display: none;
     position: fixed;
+    font-weight: bold;
+    font-size: 1.5rem;
     top: 10px;
     right: 10px;
     cursor: pointer;
+    z-index: 1500000;
 }
 
 .imagepreview img

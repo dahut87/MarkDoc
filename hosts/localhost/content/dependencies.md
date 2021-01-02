@@ -25,9 +25,17 @@
 
  * https://github.com/PrismLibrary/Prism
 
+## Table of Contents
+
+ * https://github.com/jgallen23/toc
+
 ## Icons
 
  * https://github.com/FortAwesome/Font-Awesome
+
+## Interface
+ * https://github.com/mobify/magnifik
+ * https://github.com/codepo8/css-fork-on-github-ribbon
 
 ## Essential
 
@@ -35,4 +43,3 @@
  * https://github.com/jquery/jquery
  * https://github.com/popperjs/popper-core
  * https://github.com/zenorocha/clipboard.js
- * https://github.com/codepo8/css-fork-on-github-ribbon

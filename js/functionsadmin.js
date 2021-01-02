@@ -111,6 +111,8 @@ $(function(){
 	$("#save").hide();
 	$("#content").html(emoji.replace_colons($("#content").html()));
 	setTimeout(function(){ $("#forkongithub").fadeOut(1500); }, 5000);
+	$('#content > p>  img').magnifik({ratio:1.0});
+	tocgenerate();
 
 	$("#files").on("ready.jstree", function (e) { 
 		const urlParams = new URLSearchParams(window.location.search);
@@ -139,10 +141,8 @@ $(function(){
 			else
 				editlink(file)
 		}
-	}
-});
-
-
+		}
+	});
 
     $("#save").click(function(e){
 		e.preventDefault();
@@ -182,8 +182,39 @@ $(function(){
 		search($("#search").val());
 	});
 
+	$("input[name=toc]").click(function(e) {
+		e.preventDefault();
+		tocshow();
+	});
+
 	majlink('head');
 });
+
+function tocgenerate()
+{
+	tocshow();
+	$('.toc').toc({
+		'selectors': 'h2,h3,h4',
+		'container': '#content'
+	})
+	$('.toc').append('<i class="fa fa-2x fa-caret-up" aria-hidden="true"></i>');
+	$('.toc > i').hover(function(e) {
+		e.preventDefault();
+		tochide();
+	});
+}
+
+function tochide()
+{
+	$('.toc').slideUp()
+	$('#toc').show();
+}
+
+function tocshow()
+{
+	$('.toc').slideDown()
+	$('#toc').hide();
+}
 
 function alertBox(message, className) {
     $(".alert").removeClass("alert-success alert-warning alert-danger");
@@ -270,7 +301,9 @@ function viewmode(data)
       if (data !== undefined) {
 		$("#content").html(emoji.replace_colons(data));
 		Prism.highlightAll();
+		$('#content > p>  img').magnifik({ratio:1.00});
 	}
+	tocgenerate();
 	majlink('content');
 	$(window).scrollTop(0);
 	$("#editor").hide();

@@ -24,12 +24,16 @@ include LIB_DIR."/ParsedownExtra.php";
 include LIB_DIR."/ParsedownExtraPlus.php";
 include LIB_DIR."/functions.php";
 
+### Translations
+loadlang(LANGUAGE);
+global $LANG;
+
 ### Security
 testip();
 logprotect();
 
 ### Sessions
-session_name($_SERVER['SERVER_NAME']);
+session_name(markdoc);
 session_start();
 
 /*var_dump($_POST);
@@ -57,17 +61,17 @@ else if (isset($_POST['action']))
         			} 
 				else 
 	  			{
-		      		$content = '<h1>Mot de passe incorrect.</h1>';
-		     			$log = file_exists(LOG_FILE) ? unserialize(file_get_contents(LOG_FILE)) : array();
+					$content = '<h1>'.$LANG['BADPASS'].'</h1>';
+		     		$log = file_exists(LOG_DIR) ? unserialize(file_get_contents(LOG_DIR)) : array();
 		      		if (isset($log[$_SERVER['REMOTE_ADDR']]) === false) 
 					{
 		         			 $log[$_SERVER['REMOTE_ADDR']] = array('num' => 0, 'time' => 0);
 		      		}
 		      		$log[$_SERVER['REMOTE_ADDR']]['num'] += 1;
 		      		$log[$_SERVER['REMOTE_ADDR']]['time'] = time();
-		      		file_put_contents(LOG_FILE, serialize($log));
+		      		file_put_contents(LOG_DIR, serialize($log));
 				}
-        		}
+        	}
 			else
 				$content='<h1>Aucun mot de passe renseigné !</h1>';
     		}
@@ -181,15 +185,16 @@ print(($_SESSION['md_admin'] == true)?'<li class="nav-item dropdown">
           </ul>
           <form class="form-inline" id="form" name="form" action="/index.php" method="POST">
             <input type="hidden" id="action" name="action" value="search"/>
-		<?php print(($_SESSION['md_admin'] == true)?'<input class="btn btn-outline-light" my-2 my-sm-0" value="Voir" name="voir" id="voir" type="submit"/>&nbsp;&nbsp;<input class="btn btn-outline-light" my-2 my-sm-0" value="Sauver" name="save" id="save" type="submit"/>&nbsp;&nbsp;':''); ?>
+		<?php print(($_SESSION['md_admin'] == true)?'<input class="btn btn-outline-light" my-2 my-sm-0" value="Voir" name="voir" id="voir" type="submit"/>&nbsp;&nbsp;<input class="btn btn-outline-light" my-2 my-sm-0" value="Sauver" name="save" id="save" type="button"/>&nbsp;&nbsp;':''); ?>
+		    <input class="btn <?php print(($_SESSION['md_admin'] == true)?"btn-outline-light":"btn-outline-info"); ?> my-2 my-sm-0" value="TOC" name="toc" id="toc" type="button"/>&nbsp;&nbsp;
             <input class="form-control mr-sm-2" type="text" id="search" name="search"/>
             <input class="btn <?php print(($_SESSION['md_admin'] == true)?"btn-outline-light":"btn-outline-info"); ?> my-2 my-sm-0" value="Chercher" name="submit" id="submit" type="submit"/>
               </form>
               </div>
             </nav>
         </div>
-
 <div class="container-fluid">
+<div class="float-right d-none d-md-block d-lg-block"><div class="toc fixed-top"></div></div>
 <div class="row">
 <div id="files" class="col-xs-12 order-last order-sm-last order-sm-last order-md-first order-lg-first col-md-4 col-lg-2"></div>
 <div id="separate" class="bg-dark text-white col-xs-12 col-sm-12 order-3 d-md-none d-lg-none container">Documentations</div>
@@ -199,7 +204,6 @@ print(($_SESSION['md_admin'] == true)?'<li class="nav-item dropdown">
 	print($content);
 ?><br><br>
 </div>
-<div id="toc"></div>
 <div id="image" class="imagepreview"><img></div><div id="editor"><textarea data-file="" class="form-control"></textarea></div>
 </div>
 </div>
@@ -217,6 +221,8 @@ print(($_SESSION['md_admin'] == true)?'<li class="nav-item dropdown">
 <script type="text/javascript" src="/js/jstree.min.js"></script>
 <script type="text/javascript" src="/js/prism.js"></script>
 <script type="text/javascript" src="/js/emoji.min.js"></script>
+<script type="text/javascript" src="/js/toc.bundle.js"></script>
+<script type="text/javascript" src="/js/magnifik.js"></script>
 <?php print(($_SESSION['md_admin'] == true)?'<link rel="stylesheet" href="/css/simplemde.min.css">
 <script src="/js/simplemde.min.js"></script>
 <script type="text/javascript" src="/js/functionsadmin.js"></script>':'<script type="text/javascript" src="/js/functions.js"></script>'); ?>

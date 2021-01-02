@@ -17,7 +17,7 @@ unzip v6.0.0.zip
 mv emoji-data-v6.0.0 emoji-data
 ```
 
-## Configuration
+## Multiples hosts
 
 There is a sample website in the "[website_root]/hosts/locahost" directory. It's easy to add a new one, you create one subfolder by name served by your webserver.
 
