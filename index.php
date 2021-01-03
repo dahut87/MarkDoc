@@ -26,14 +26,14 @@ include LIB_DIR."/functions.php";
 
 ### Translations
 loadlang(LANGUAGE);
-global $LANG;
+global $LANG,$JSLANG;
 
 ### Security
 testip();
 logprotect();
 
 ### Sessions
-session_name(markdoc);
+session_name('markdoc');
 session_start();
 
 /*var_dump($_POST);
@@ -223,6 +223,9 @@ print(($_SESSION['md_admin'] == true)?'<li class="nav-item dropdown">
 <script type="text/javascript" src="/js/emoji.min.js"></script>
 <script type="text/javascript" src="/js/toc.bundle.js"></script>
 <script type="text/javascript" src="/js/magnifik.js"></script>
+<script type="text/javascript">
+var LANG = <?php echo $JSLANG; ?>
+</script>
 <?php print(($_SESSION['md_admin'] == true)?'<link rel="stylesheet" href="/css/simplemde.min.css">
 <script src="/js/simplemde.min.js"></script>
 <script type="text/javascript" src="/js/functionsadmin.js"></script>':'<script type="text/javascript" src="/js/functions.js"></script>'); ?>

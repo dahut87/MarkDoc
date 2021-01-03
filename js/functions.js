@@ -10,13 +10,14 @@
 var external = RegExp('^((f|ht)tps?:)?//');
 var javascript = RegExp('^javascript:');
 var emoji;
+var LANG;
 $(function(){
 	$("#files").jstree({
 	    themes: { responsive: true },
 	    plugins: [ "types" ],
 	    core: 
 	    {
-	    	    strings:{ loading: "Chargement" },
+	    	    strings:{ loading: LANG['LOADING'] },
 		    check_callback: true,
 		    data : {
       				type: "POST",
@@ -75,7 +76,7 @@ function openlink(dest,majtree)
 		if (dest!="special/404.md")
 	    		openlink("special/404.md",false);
 		else
-			$("#content").html("<b>Erreur 404 sur erreur 404: pas de /special/404.md !");
+			$("#content").html("<b>"+LANG['404X2']+"</b>");
 	  }
 	});
 }
@@ -173,7 +174,7 @@ function search(arg)
 		if (dest!="special/404.md")
 	    		openlink("special/404.md",false);
 		else
-			$("#content").html("<b>Erreur 404 sur erreur 404: pas de /special/404.md !");
+			$("#content").html("<b>"+LANG['404X2']+"</b>");
 	  }
 	});
 }

@@ -157,8 +157,9 @@ function searchstr($path, $string){
 
 function loadlang($language)
 {
-    global $LANG;
-    $LANG=json_decode(file_get_contents(ROOT_DIR."lang/".$language.".json"),true);
+    global $LANG,$JSLANG;
+    $JSLANG=file_get_contents(ROOT_DIR."lang/".$language.".json");
+    $LANG=json_decode($JSLANG,true);
 }
 
 function history($file)

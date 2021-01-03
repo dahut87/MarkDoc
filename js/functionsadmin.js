@@ -56,7 +56,7 @@ $(function(){
 	    plugins: ["contextmenu", "dnd" ],
 	    core: 
 	    {
-	    	    strings:{ loading: "Chargement" },
+	    	    strings:{ loading: LANG['LOADING'] },
 		    check_callback: true,
 		    data : {
       				type: "POST",
@@ -77,7 +77,7 @@ $(function(){
                     preview.innerHTML = emoji.replace_colons(this.parent.markdown(plainText));
                     Prism.highlightAll();
                 }.bind(this), 1)
-                return "Chargement..."
+                return LANG['LOADING']
             },
 		toolbar: ["bold","italic","strikethrough","|","heading-1","heading-2","heading-3","|","quote","unordered-list","ordered-list","horizontal-rule","|",
 		{
@@ -161,12 +161,12 @@ $(function(){
                alertBox(data[1], data[0]);
 	  },
 	  error: function(XMLHttpRequest, textStatus, errorThrown) {
-		alertBox('Erreur AJAX !','danger');
+		alertBox(LANG['AJAXERROR'],'danger');
 	  }
 	  });
 	}
 	else
-		alertBox('Erreur de sélection !', 'danger');
+		alertBox(LANG['SELECTERROR'], 'danger');
     });
 
 	$("#files").on("select_node.jstree", function (e, nodes) { 
@@ -174,7 +174,7 @@ $(function(){
 		if ($("#files").jstree("is_leaf",nodes.node))
 			editlink(file);
 		else
-			alertBox('Fonction non implémentée !','danger');
+			alertBox(LANG['NOTCODED'],'danger');
 	});
 
 	$("input[name=submit]").click(function(e) {
@@ -239,7 +239,7 @@ function openlink(dest,majtree)
 		if (dest!="special/404.md")
 	    		openlink("special/404.md",true);
 		else
-			$("#content").html("<b>Erreur 404 sur erreur 404: pas de /special/404.md !");
+			$("#content").html("<b>"+LANG['404X2']+"</b>");
 	  }
 	});
 }
@@ -329,7 +329,7 @@ function editlink(dest)
 				editfile=dest;
 		  },
 		  error: function(XMLHttpRequest, textStatus, errorThrown) {
-			alertBox('Erreur AJAX', 'danger');
+			alertBox(LANG['AJAXERROR'], 'danger');
 		  }
 		});
 	}
@@ -361,7 +361,7 @@ function search(arg)
 		if (dest!="special/404.md")
 	    		openlink("special/404.md",true);
 		else
-			$("#content").html("<b>Erreur 404 sur erreur 404: pas de /special/404.md !");
+			$("#content").html("<b>"+LANG['404X2']+"</b>");
 	  }
 	});
 }
