@@ -102,7 +102,7 @@ else if (isset($_POST['action']))
         case 'search':
 		$results=searchstr(CONTENT_DIR,$_POST['search']);
 		//print_r($results);
-		$content="<h1>Résultats de recherche</h1><p>Il y a ".$results['totalFiles']." occurence(s) trouvée(s):</p>";
+		$content=sprintf($LANG['FOUND'],$results['totalFiles']);
 		foreach($results['files'] as $key => $value)
 			$content.='<p class="filefound"><a href="'.$key.'">'.$key.'</a></p><p class="textfound">'.$value.'</p>';
 		if ($_POST['type']=="js") 
@@ -155,7 +155,7 @@ else
 </head>
 <body>
    <div id="head" class="">
-   <span id="forkongithub"><a href="https://github.com/dahut87/MarkDoc">Fork me on GitHub</a></span>
+   <span id="forkongithub"><a href="https://github.com/dahut87/MarkDoc"><?php print($LANG['FORK']); ?></a></span>
       <nav class="navbar fixed-top navbar-expand-md <?php print(($_SESSION['md_admin'] == true)?"navbar-custom":"bg-dark navbar-dark"); ?>">
         <a class="navbar-brand" href="/index.md"><i class="fas <?php echo ICON; ?>"></i>&nbsp;<?php echo TITLE; ?></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -164,7 +164,7 @@ else
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Menu</a>
+              <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button"><?php print($LANG['MENU']); ?></a>
               <div class="dropdown-menu">
 <?php
 	print(getnav());
@@ -173,22 +173,22 @@ else
             </li>
 <?php
 print(($_SESSION['md_admin'] == true)?'<li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Admin</a>
+              <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">'.$LANG['ADMIN'].'</a>
               <div class="dropdown-menu">
-		<a class="dropdown-item" href=":CONFIG">Configuration</a>
-		<a class="dropdown-item" href=":PASSWORD">Mot de passe</a>
+		<a class="dropdown-item" href=":CONFIG">'.$LANG['CONFIG'].'</a>
+		<a class="dropdown-item" href=":PASSWORD">'.$LANG['PASSWORD'].'</a>
 		<hr>
-		<a class="dropdown-item" href="https://'.$_SERVER['SERVER_NAME'].'?logout">Se déconnecter</a>
-      </div></li>':'<li class="nav-item"><a class="nav-link " href=":ADMIN">Admin</a></li>');
+		<a class="dropdown-item" href="https://'.$_SERVER['SERVER_NAME'].'?logout">'.$LANG['LOGOUT'].'</a>
+      </div></li>':'<li class="nav-item"><a class="nav-link " href=":ADMIN">'.$LANG['ADMIN'].'</a></li>');
 ?>
-            <li class="nav-item"><a class="nav-link " href="/apropos.md">A propos</a></li>
+            <li class="nav-item"><a class="nav-link " href="<?php print($LANG['ABOUTMD'].'">'.$LANG['ABOUT']); ?></a></li>
           </ul>
           <form class="form-inline" id="form" name="form" action="/index.php" method="POST">
             <input type="hidden" id="action" name="action" value="search"/>
-		<?php print(($_SESSION['md_admin'] == true)?'<input class="btn btn-outline-light" my-2 my-sm-0" value="Voir" name="voir" id="voir" type="submit"/>&nbsp;&nbsp;<input class="btn btn-outline-light" my-2 my-sm-0" value="Sauver" name="save" id="save" type="button"/>&nbsp;&nbsp;':''); ?>
-		    <input class="btn <?php print(($_SESSION['md_admin'] == true)?"btn-outline-light":"btn-outline-info"); ?> my-2 my-sm-0" value="TOC" name="toc" id="toc" type="button"/>&nbsp;&nbsp;
+		<?php print(($_SESSION['md_admin'] == true)?'<input class="btn btn-outline-light" my-2 my-sm-0" value="'.$LANG['VIEW'].'" name="voir" id="voir" type="submit"/>&nbsp;&nbsp;<input class="btn btn-outline-light" my-2 my-sm-0" value="'.$LANG['SAVE'].'" name="save" id="save" type="button"/>&nbsp;&nbsp;':''); ?>
+		    <input class="btn <?php print(($_SESSION['md_admin'] == true)?"btn-outline-light":"btn-outline-info"); ?> my-2 my-sm-0" value="<?php print($LANG['TOC']); ?>" name="toc" id="toc" type="button" style="display: none;"/>&nbsp;&nbsp;
             <input class="form-control mr-sm-2" type="text" id="search" name="search"/>
-            <input class="btn <?php print(($_SESSION['md_admin'] == true)?"btn-outline-light":"btn-outline-info"); ?> my-2 my-sm-0" value="Chercher" name="submit" id="submit" type="submit"/>
+            <input class="btn <?php print(($_SESSION['md_admin'] == true)?"btn-outline-light":"btn-outline-info"); ?> my-2 my-sm-0" value="<?php print($LANG['SEARCH']); ?>" name="submit" id="submit" type="submit"/>
               </form>
               </div>
             </nav>
@@ -204,7 +204,7 @@ print(($_SESSION['md_admin'] == true)?'<li class="nav-item dropdown">
 	print($content);
 ?><br><br>
 </div>
-<div id="image" class="imagepreview"><img></div><div id="editor"><textarea data-file="" class="form-control"></textarea></div>
+<div id="image" class="imagepreview" style="display: none;"><img></div><div id="editor" style="display: none;"><textarea data-file="" class="form-control"></textarea></div>
 </div>
 </div>
 </div>

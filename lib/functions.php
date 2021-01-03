@@ -11,19 +11,21 @@
 
 function testip()
 {
+    global $LANG;
 	if (empty(ACCESS_IP) === false && ACCESS_IP != $_SERVER['REMOTE_ADDR'])
-	    die('Your IP address is not allowed to access this page.');
+	    die($LANG['NOIP']);
 }
 
 function logprotect()
 {
+    global $LANG;
 	if (file_exists(LOG_DIR)) {
 	    $log = unserialize(file_get_contents(LOG_DIR));
 	    if (empty($log)) {
 		  $log = [];
 	    }
 	    if (isset($log[$_SERVER['REMOTE_ADDR']]) && $log[$_SERVER['REMOTE_ADDR']]['num'] > 3 && time() - $log[$_SERVER['REMOTE_ADDR']]['time'] < 86400) {
-		  die('This IP address is blocked due to unsuccessful login attempts.');
+		  die($LANG['BLOCKIP']);
 	    }
 	    foreach ($log as $key => $value) {
 		  if (time() - $value['time'] > 86400) {
@@ -50,60 +52,35 @@ function redirect($address = null)
 
 function specialurl($url)
 {
-	switch ($url) {
+    global $LANG;
+    switch ($url) 
+    {
         case ':APROPOS':
-            $content = '# MarkDoc
-
-**PHP Markdown-based documentation management system, Free &amp; OpenSource :heart_eyes: for easily create your documentation website**
-
-This website is heavily formated with markdown format !
-```
-  __  __            _    _____             
- |  \/  |          | |  |  __ \            
- | \  / | __ _ _ __| | _| |  | | ___   ___ 
- | |\/| |/ _` | \'__| |/ / |  | |/ _ \ / __|
- | |  | | (_| | |  |   <| |__| | (_) | (__ 
- |_|  |_|\__,_|_|  |_|\_\_____/ \___/ \___|
-```                                      
-
-![gplV3](https://www.gnu.org/graphics/gplv3-127x51.png) Sous licence GPLv3 [Licence](/special/gpl-3.0.md) - *Sources downloadables on [GitHub](https://github.com/dahut87/MarkDoc)*
-
-Based on Pheditor "PHP file editor" released under MIT license
-
-*Specials thanks to Hamid Samak*
-
-Made in 2020 by Nicolas H.
-
----
-
-For more informations, visit the demo website running MarkDoc engine at : [https://markdoc.palon.fr](https://markdoc.palon.fr)';
- 	 	$extra = new ParsedownExtraplus();
-		print($extra->text($content));
-		exit;
+            $content = $LANG['ABOUTMARKDOC'];
+ 	 	    $extra = new ParsedownExtraplus();
+		    print($extra->text($content));
+		    exit;
         case ':ADMIN':
-		if (isset($_SESSION['md_admin']) === false || $_SESSION['md_admin'] !== true) 
-    			$content = '<form method="post"><div style="text-align:center"><h1></h1>' . (isset($error) ? '<p style="color:#dd0000">' . $error . '</p>' : null) . '<input id="mdsimple_password" name="md_password" type="password" value="" placeholder="Password&hellip;" tabindex="1"><br><br><input type="hidden" id="action" name="action" value="ident"><input type="submit" value="Login" tabindex="2"></div></form><script type="text/javascript">$("#md_password").focus();</script>';
-		else
-			$content = "<h1>Vous êtes déjà logué !</h1>";        	
-		print($content);
-		exit;
+            if (isset($_SESSION['md_admin']) === false || $_SESSION['md_admin'] !== true) 
+                    $content = '<form method="post"><div style="text-align:center"><h1></h1>' . (isset($error) ? '<p style="color:#dd0000">' . $error . '</p>' : null) . '<input id="mdsimple_password" name="md_password" type="password" value="" placeholder="Password&hellip;" tabindex="1"><br><br><input type="hidden" id="action" name="action" value="ident"><input type="submit" value="'.$LANG['LOGIN'].'" tabindex="2"></div></form><script type="text/javascript">$("#md_password").focus();</script>';
+            else
+                $content = '<h1>'.$LANG['ALREADYLOG'].'</h1>';        	
+            print($content);
+            exit;
         case ':SITEMAP':
-		$content="<h1>Plan de site</h1>";
-		foreach(plan(CONTENT_DIR) as $file)
-			$content.='<p class="fileletter"><a href="'.$file.'">'.$file.'</a></p>'	;
+            $content='<h1>'.$LANG['SITEMAP'].'</h1>';
+            foreach(plan(CONTENT_DIR) as $file)
+                $content.='<p class="fileletter"><a href="'.$file.'">'.$file.'</a></p>'	;
+                return $content;
+        case ':GLOSSAIRE':
+            $content='<h1>'.$LANG['GLOSSARY'].'</h1>';
+            foreach(glossary(CONTENT_DIR) as $letter => $files)
+            {
+                $content.='<p class="letter">'.$letter.'</p>';
+                foreach($files as $file)
+                    $content.='<p class="fileletter"><a href="'.$file.'">'.$file.'</a></p>'	;
+            }
             return $content;
-        case ':GLOSSAIRE':
-		$content="<h1>Glossaire</h1>";
-		foreach(glossary(CONTENT_DIR) as $letter => $files)
-		{
-			$content.='<p class="letter">'.$letter.'</p>';
-			foreach($files as $file)
-				$content.='<p class="fileletter"><a href="'.$file.'">'.$file.'</a></p>'	;
-		}
-		return $content;
-        case ':GLOSSAIRE':
-		
-		return $content;
 	}
 }
 
@@ -220,27 +197,29 @@ function history($file)
 
 function setcontent($url,$data)
 {
+    global $LANG;
 	$file = CONTENT_DIR.$url;
 	if (!file_exists($file))
 	{
              file_put_contents($file, $data);
-             $content='success|Fichier créé.';
+             $content='success|'.$LANG['CREATED'];
 	}
 	else if (is_writable($file))
 	{
             file_put_contents($file, $data);
 		    history($file);
-            $content='success|Fichier enregistré.';
+            $content='success|'.$LANG['SAVED'];
 	}
 	else if (!is_writable($file))
-		$content='danger|Fichier protégé.';
+		$content='danger|'.$LANG['PROTECTED'];
 	else
-		$content='danger|Erreur indéterminée.';
+		$content='danger|'.$LANG['INDETERMINED'];
 	return $content;
 }
 
 function getcontent($url,$md=true)
 {
+    global $LANG;
    $file = CONTENT_DIR.$url;
    if (file_exists($file))
     	$content=file_get_contents($file);
@@ -250,7 +229,7 @@ function getcontent($url,$md=true)
       if (file_exists(CONTENT_DIR . "special/404.md")) 
 		$content=getcontent("special/404.md");
 	else
-            $content="** Erreur 404 sur erreur 404 : pas de fichier 404.md**";
+            $content='**'.$LANG['404X2'].'**';
    }
    if ($md==true)
    {
@@ -295,6 +274,7 @@ function filesJSON($path,$all,$first=true)
 
 function getnav()
 {
+    global $LANG;
 	$menu=getcontent("special/nav.md");
 	$menuitems=explode("\n",$menu);
 	$data="";
@@ -304,6 +284,6 @@ function getnav()
 	 $a = new SimpleXMLElement($item);
 	 $data.='<a class="dropdown-item" href="'.$a['href'].'">'.$a[0].'</a>';
 	}
-	 $data.='<a class="dropdown-item" href=":APROPOS">Sur MarkDoc...</a>';
+	 $data.='<a class="dropdown-item" href=":APROPOS">'.$LANG['MARKDOC'].'</a>';
 	return $data;
 }

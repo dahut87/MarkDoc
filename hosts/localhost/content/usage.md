@@ -43,6 +43,7 @@ define('LOG_FILE', 'log.txt');
 define('ACCESS_IP', '');
 define('HISTORY_FILE', 'history.txt');
 define('MAX_HISTORY_FILES', 5);
+define('LANG', 'en');
 ```
 
 **NOTE**:

@@ -48,7 +48,7 @@ $(function(){
 		search($("#search").val());
 	});
 
-	$("input[name=toc]").click(function(e) {
+	$("input[name=toc]").hover(function(e) {
 		e.preventDefault();
 		tocshow();
 	});
