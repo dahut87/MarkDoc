@@ -277,7 +277,7 @@ function filesJSON($path,$all,$first=true)
             {
                 $file = pathinfo($node->getFilename());
                 $data['text'] = $file['filename'];
-                $data['icon'] = "fas fa-book-open";
+                $data['icon'] = "fas fa-book";
             }
         }
 	  $alldata[]=$data;
