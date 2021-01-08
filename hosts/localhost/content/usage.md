@@ -14,7 +14,8 @@ Install Emoji data and copy Emoji data to the "emoji-data"
 ```
 wget https://github.com/iamcal/emoji-data/archive/v6.0.0.zip
 unzip v6.0.0.zip
-mv emoji-data-v6.0.0 emoji-data
+mv emoji-data-6.0.0 emoji-data
+rm -rf v6.0.0.zip
 ```
 
 ## Multiples hosts
@@ -44,6 +45,7 @@ define('ACCESS_IP', '');
 define('HISTORY_FILE', 'history.txt');
 define('MAX_HISTORY_FILES', 5);
 define('LANG', 'en');
+define('ACCESS_PRIVATE', 'en');
 ```
 
 **NOTE**:

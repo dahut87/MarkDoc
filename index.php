@@ -10,6 +10,7 @@
  */
 
 ### Global defines
+define('PRIVATE', true);
 define('ROOT_DIR', realpath(dirname(__FILE__)) .'/');
 define('LIB_DIR', ROOT_DIR.'lib/');
 define('HOST_DIR',ROOT_DIR.'hosts/'.$_SERVER['SERVER_NAME'].'/');
@@ -48,11 +49,11 @@ if (isset($_GET['logout'])) {
 }
 else if (isset($_POST['action']))
 {
-	switch ($_POST['action']) {
-	  case 'ident':
-		if (isset($_SESSION['md_admin']) === false || $_SESSION['md_admin'] !== true) 
+	if ((isset($_SESSION['md_admin']) === false || $_SESSION['md_admin'] !== true)) 
+	{
+		if ($_POST['action']=='ident')
 		{
-    			if (isset($_POST['md_password']) && empty($_POST['md_password']) === false) 
+			if (isset($_POST['md_password']) && empty($_POST['md_password']) === false) 
 			{
         			if (hash('sha512', $_POST['md_password']) === PASSWORD) 
 				{
@@ -71,50 +72,64 @@ else if (isset($_POST['action']))
 		      		$log[$_SERVER['REMOTE_ADDR']]['time'] = time();
 		      		file_put_contents(LOG_DIR, serialize($log));
 				}
-        	}
+			}
 			else
-				$content='<h1>Aucun mot de passe renseigné !</h1>';
-    		}
-		else
-			$content='<h1>Vous êtes déjà logué !</h1>';
-		break;
-	  case 'children':
-		print(json_encode(filesJSON(CONTENT_DIR,false)));
-		exit;
-	  case 'allchildren':
-		print(json_encode(filesJSON(CONTENT_DIR,true)));
-		exit;
-        case 'open':
-		$file=urldecode($_POST['file']);
-		if (substr($file,0,1)==":")
-    			print(specialurl($file));
-		else
-			print(getcontent($file));
-            exit;
+				$content='<h1>'.$LANG['NOPASS'].'</h1>';
+
+		}
+		else if (ACCESS_PRIVATE)
+			switch ($_POST['action']) 
+			{
+				case 'allchildren':
+				case 'children':
+					print('{ "id" : "id1", "icon" : "fas fa-atlas", "parent" : "#", "text" : "'.$_SERVER["SERVER_NAME"].'" }');
+					exit;
+				default:
+					$content=specialurl(":ADMIN",true);
+			}
+	}
+	switch ($_POST['action']) 
+	{
+	  	case 'children':
+			print(json_encode(filesJSON(CONTENT_DIR,false)));
+			exit;
+	  	case 'allchildren':
+			print(json_encode(filesJSON(CONTENT_DIR,true)));
+			exit;
+		case 'open':
+			$file=urldecode($_POST['file']);
+			if (substr($file,0,1)==":") 
+				specialurl($file,true);
+			else
+				print(getcontent($file,true,true));
+				exit;
         case 'realopen':
-		$file=urldecode($_POST['file']);
-		print(getcontent($file,false));
+			$file=urldecode($_POST['file']);
+			print(getcontent($file,false,true));
             exit;
         case 'save':
-		$file=urldecode($_POST['file']);
-		print(setcontent($file,$_POST['data']));
+			$file=urldecode($_POST['file']);
+			print(setcontent($file,$_POST['data']));
             exit;
         case 'search':
-		$results=searchstr(CONTENT_DIR,$_POST['search']);
-		//print_r($results);
-		$content=sprintf($LANG['FOUND'],$results['totalFiles']);
-		foreach($results['files'] as $key => $value)
-			$content.='<p class="filefound"><a href="'.$key.'">'.$key.'</a></p><p class="textfound">'.$value.'</p>';
-		if ($_POST['type']=="js") 
-		{
-			print($content);
-			exit;
-		}
+			$results=searchstr(CONTENT_DIR,$_POST['search']);
+			$content=sprintf($LANG['FOUND'],$results['totalFiles']);
+			foreach($results['files'] as $key => $value)
+				$content.='<p class="filefound"><a href="'.$key.'">'.$key.'</a></p><p class="textfound">'.$value.'</p>';
+			if ($_POST['type']=="js") 
+			{
+				print($content);
+				exit;
+			}
 	}
 }
+else if (ACCESS_PRIVATE && !isset($_SESSION['md_admin']))
+{
+	$content=specialurl(":ADMIN",false);
+} 
 else if (substr($file,0,1)==":")
 {
-    $content=specialurl($file);
+    $content=specialurl($file,false);
 }
 else if ($filedetail['extension']=="md")
 {

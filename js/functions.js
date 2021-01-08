@@ -17,7 +17,7 @@ $(function(){
 	    plugins: [ "types" ],
 	    core: 
 	    {
-	    	    strings:{ loading: LANG['LOADING'] },
+	    	strings:{ loading: LANG['LOADING'] },
 		    check_callback: true,
 		    data : {
       				type: "POST",

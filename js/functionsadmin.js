@@ -56,7 +56,7 @@ $(function(){
 	    plugins: ["contextmenu", "dnd" ],
 	    core: 
 	    {
-	    	    strings:{ loading: LANG['LOADING'] },
+	    	strings:{ loading: LANG['LOADING'] },
 		    check_callback: true,
 		    data : {
       				type: "POST",
@@ -172,7 +172,7 @@ $(function(){
 	$("#files").on("select_node.jstree", function (e, nodes) { 
    		file="/"+$("#files").jstree("get_path",nodes.node,"/").replace(/^.+?[/]/, '');
 		if ($("#files").jstree("is_leaf",nodes.node))
-			editlink(file);
+			openlink(file,false);
 		else
 			alertBox(LANG['NOTCODED'],'danger');
 	});
@@ -226,6 +226,11 @@ function alertBox(message, className) {
 
 function openlink(dest,majtree)
 {
+	if (dest.match(/.(jpg|jpeg|png|gif|webp|svg|ico)$/i))
+	{
+		imagemode(dest);
+		return;
+	}
 	$.ajax({
 	  type: "POST",
 	  url: "/index.php",
@@ -316,23 +321,18 @@ function viewmode(data)
 
 function editlink(dest)
 {
-	if (dest.match(/.(jpg|jpeg|png|gif|webp|svg|ico)$/i))
-		imagemode(dest);
-	else
-	{
-		$.ajax({
-		  type: "POST",
-		  url: "/index.php",
-		  data: { action: "realopen", file: encodeURIComponent(dest) },
-		  success: function(data){
-				editmode(data);
-				editfile=dest;
-		  },
-		  error: function(XMLHttpRequest, textStatus, errorThrown) {
-			alertBox(LANG['AJAXERROR'], 'danger');
-		  }
-		});
-	}
+	$.ajax({
+	  type: "POST",
+	  url: "/index.php",
+	  data: { action: "realopen", file: encodeURIComponent(dest) },
+	  success: function(data){
+			editmode(data);
+			editfile=dest;
+	  },
+	  error: function(XMLHttpRequest, textStatus, errorThrown) {
+		alertBox(LANG['AJAXERROR'], 'danger');
+	  }
+	});
 }
 
 function majlink(context)

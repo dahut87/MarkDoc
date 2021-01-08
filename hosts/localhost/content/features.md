@@ -10,11 +10,11 @@
 4. Restricted access by ip address
 5. Admin access logging
 6. Table of contents
+7. Password protected area
 
 ## Planned
 
 1. Complete File Manager
-2. Password protected area
 3. Keeping the history of edited files and changes
 4. Configuration viewer
 5. Emoji menu in Markdown editor

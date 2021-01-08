@@ -25,7 +25,7 @@ function logprotect()
 		  $log = [];
 	    }
 	    if (isset($log[$_SERVER['REMOTE_ADDR']]) && $log[$_SERVER['REMOTE_ADDR']]['num'] > 3 && time() - $log[$_SERVER['REMOTE_ADDR']]['time'] < 86400) {
-		  die($LANG['BLOCKIP']);
+		  die("<h1>".$LANG['BLOCKIP']."</h1>");
 	    }
 	    foreach ($log as $key => $value) {
 		  if (time() - $value['time'] > 86400) {
@@ -50,28 +50,26 @@ function redirect($address = null)
     exit;
 }
 
-function specialurl($url)
+function specialurl($url,$quit)
 {
     global $LANG;
     switch ($url) 
     {
         case ':APROPOS':
-            $content = $LANG['ABOUTMARKDOC'];
  	 	    $extra = new ParsedownExtraplus();
-		    print($extra->text($content));
-		    exit;
+            $content=$extra->text($LANG['ABOUTMARKDOC']);
+            break;
         case ':ADMIN':
             if (isset($_SESSION['md_admin']) === false || $_SESSION['md_admin'] !== true) 
                     $content = '<form method="post"><div style="text-align:center"><h1></h1>' . (isset($error) ? '<p style="color:#dd0000">' . $error . '</p>' : null) . '<input id="mdsimple_password" name="md_password" type="password" value="" placeholder="Password&hellip;" tabindex="1"><br><br><input type="hidden" id="action" name="action" value="ident"><input type="submit" value="'.$LANG['LOGIN'].'" tabindex="2"></div></form><script type="text/javascript">$("#md_password").focus();</script>';
             else
-                $content = '<h1>'.$LANG['ALREADYLOG'].'</h1>';        	
-            print($content);
-            exit;
+                $content = '<h1>'.$LANG['ALREADYLOG'].'</h1>'; 
+            break;      	
         case ':SITEMAP':
             $content='<h1>'.$LANG['SITEMAP'].'</h1>';
             foreach(plan(CONTENT_DIR) as $file)
                 $content.='<p class="fileletter"><a href="'.$file.'">'.$file.'</a></p>'	;
-                return $content;
+            break;
         case ':GLOSSAIRE':
             $content='<h1>'.$LANG['GLOSSARY'].'</h1>';
             foreach(glossary(CONTENT_DIR) as $letter => $files)
@@ -80,8 +78,15 @@ function specialurl($url)
                 foreach($files as $file)
                     $content.='<p class="fileletter"><a href="'.$file.'">'.$file.'</a></p>'	;
             }
-            return $content;
-	}
+            break;
+    }
+    if ($quit)
+    {
+        print($content);
+        exit;
+    }
+    else
+        return $content;
 }
 
 function plan($path){
@@ -218,7 +223,7 @@ function setcontent($url,$data)
 	return $content;
 }
 
-function getcontent($url,$md=true)
+function getcontent($url,$md=true,$header=false)
 {
     global $LANG;
    $file = CONTENT_DIR.$url;
@@ -232,6 +237,7 @@ function getcontent($url,$md=true)
 	else
             $content='**'.$LANG['404X2'].'**';
    }
+   if ($header) header('Content-type: '.mime_content_type($file),true);
    if ($md==true)
    {
    	 $extra = new ParsedownExtraplus();
@@ -251,24 +257,33 @@ function filesJSON($path,$all,$first=true)
         $data = array();
         if ( $node->isDir() && !$node->isDot() )
         {
-		$data['text'] = $node->getFilename();
-		$data['children'] = filesJSON($path.$node->getFilename()."/",$all,false);
+            $data['text'] = $node->getFilename();
+            $data['children'] = filesJSON($path.$node->getFilename()."/",$all,false);
+            $data['icon'] = "far fa-folder";
         }
         else
         {
-		if ($all)
-			$data['text'] = $node->getFilename();
-		else
-		{
-			$file = pathinfo($node->getFilename());
-            	$data['text'] = $file['filename'];
-		}
-            $data['icon'] = "jstree-file";
+            if ($all)
+            {
+                $data['text'] = $node->getFilename();
+                if ($node->getExtension() == VIEWABLE_FORMAT)
+                    $data['icon'] = "fas fa-book";
+                else if (strpos(IMAGE_EXT,$node->getExtension())>=0)
+                    $data['icon'] = "far fa-images";
+                else
+                    $data['icon'] = "far fa-file";
+            }
+            else
+            {
+                $file = pathinfo($node->getFilename());
+                $data['text'] = $file['filename'];
+                $data['icon'] = "fas fa-book-open";
+            }
         }
 	  $alldata[]=$data;
     }
     if ($first)
-    	return  array('text'=>$_SERVER['SERVER_NAME'],'children'=>$alldata,'state' => array('opened'=>true));
+    	return  array('icon'=>"fas fa-atlas",'text'=>$_SERVER['SERVER_NAME'],'children'=>$alldata,'state' => array('opened'=>true));
     else
 	return $alldata;
 }

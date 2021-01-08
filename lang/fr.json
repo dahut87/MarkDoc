@@ -2,6 +2,7 @@
     "MENU": "Menu",
     "HOME" : "Accueil",
     "GLOSSARY" : "Glossaire",
+    "SITEMAP" : "Plan du site",
     "MARKDOC" : "A propos de MarkDoc",
     "ABOUTMARKDOC" : "# MarkDoc\r\n\r\n**Syst\u00E8me de gestion de documents Mardown \u00E9crits en PHP, Gratuit &amp; OpenSource :heart_eyes: afin de facilement cr\u00E9er vos sites internet de documentation**\r\n    \r\nCe site est lourdement format\u00E9 au format Markdown !\r\n```\r\n  __  __            _    _____             \r\n |  \\\/  |          | |  |  __ \\            \r\n | \\  \/ | __ _ _ __| | _| |  | | ___   ___ \r\n | |\\\/| |\/ _` | '__| |\/ \/ |  | |\/ _ \\ \/ __|\r\n | |  | | (_| | |  |   <| |__| | (_) | (__ \r\n |_|  |_|\\__,_|_|  |_|\\_\\_____\/ \\___\/ \\___|\r\n```                                      \r\n    \r\n![gplV3](https:\/\/www.gnu.org\/graphics\/gplv3-127x51.png) Sous licence GPLv3 [Licence](\/special\/gpl-3.0.md) - *Sources t\u00E9l\u00E9chargeables sur [GitHub](https:\/\/github.com\/dahut87\/MarkDoc)*\r\n    \r\nBas\u00E9 sur Pheditor \"PHP file editor\" sous licence MIT\r\n \r\n*Merci \u00E0 Hamid Samak*\r\n    \r\nR\u00E9alis\u00E9 en 2020 par Nicolas H.\r\n    \r\n---\r\n    \r\nPour plus d'informations, visitez le site internet de d\u00E9monstration \u00E0 l'url suivante : [https:\/\/markdoc.palon.fr](https:\/\/markdoc.palon.fr)",
     "ADMIN" : "Admin",
