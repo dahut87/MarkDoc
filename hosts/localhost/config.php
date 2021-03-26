@@ -11,4 +11,5 @@ define('ACCESS_IP', '');
 define('HISTORY_FILE', 'history');
 define('MAX_HISTORY_FILES', 5);
 define('LANGUAGE', 'en');
-define('PRIVATE',false);
+define('ACCESS_PRIVATE',false);
+define('PHOTO_EXT','jpg,svg,gif,png,webp');
