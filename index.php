@@ -101,8 +101,11 @@ else if (isset($_POST['action']))
 			if (substr($file,0,1)==":") 
 				specialurl($file,true);
 			else
-				print(getcontent($file,true,true));
+			{
+				$md=strpos('.md',$file)>=0;
+				print(getcontent($file,$md,true));
 				exit;
+			}
         case 'realopen':
 			$file=urldecode($_POST['file']);
 			print(getcontent($file,false,true));
@@ -139,8 +142,9 @@ else if ($filedetail['extension']!="" && strpos(ALLOWED_EXT, $filedetail['extens
 {
    if (file_exists(CONTENT_DIR . $file))
    {
-	if ($filedetail['extension']=="css") header("Content-type: text/css");
-    	print file_get_contents(CONTENT_DIR . $file);
+   	header('Content-type: '.mime_content_type(CONTENT_DIR . $file),true);
+    	print file_get_contents(CONTENT_DIR . $file, false);
+	exit;
    }
    else
    {
@@ -157,7 +161,7 @@ else
 <!DOCTYPE html>
 <html>
 <head>
-<title><?php echo TITLE; ?>
+<title><?php echo TITLE." - ".$file; ?>
 </title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <link rel="stylesheet" type="text/css" href="/css/prism.css" />
@@ -169,6 +173,7 @@ else
 <?php print(($_SESSION['md_admin'] == true)?'<link rel="stylesheet" href="/css/codemirror.min.css" />':''); ?>
 </head>
 <body>
+   <div id="title" style="display: none;"><?php echo TITLE; ?></div>
    <div id="head" class="">
    <span id="forkongithub"><a href="https://github.com/dahut87/MarkDoc"><?php print($LANG['FORK']); ?></a></span>
       <nav class="navbar fixed-top navbar-expand-md <?php print(($_SESSION['md_admin'] == true)?"navbar-custom":"bg-dark navbar-dark"); ?>">

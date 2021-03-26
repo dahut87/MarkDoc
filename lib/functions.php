@@ -253,7 +253,7 @@ function filesJSON($path,$all,$first=true)
     $dir= new DirectoryIterator($path);
     foreach($dir as $node) 
     {
-        if (($node->getFilename() =="special") || (SHOW_HIDDEN_FILES === false && substr($node->getFilename(), 0, 1) === '.') || (($node->getExtension() != VIEWABLE_FORMAT && $all==false) && $node->isFile())) continue;
+        if (($node->getFilename() =="images") || ($node->getFilename() =="documents") || ($node->getFilename() =="special") || (SHOW_HIDDEN_FILES === false && substr($node->getFilename(), 0, 1) === '.') || (($node->getExtension() != VIEWABLE_FORMAT && $all==false) && $node->isFile())) continue;
         $data = array();
         if ( $node->isDir() && !$node->isDot() )
         {

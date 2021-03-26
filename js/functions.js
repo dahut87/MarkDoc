@@ -9,6 +9,7 @@
 
 var external = RegExp('^((f|ht)tps?:)?//');
 var javascript = RegExp('^javascript:');
+var textual = RegExp('\.md$');
 var emoji;
 var LANG;
 $(function(){
@@ -53,12 +54,18 @@ $(function(){
 		e.preventDefault();
 		tocshow();
 	});
+	$(window).on('popstate', function(e){
+		 window.location.reload();
+	});
 
 	majlink('head');
 });
 
 function openlink(dest,majtree)
 {
+	$("#content").html('<div class="container h-100"><div class="row h-100 justify-content-center align-items-center"><div class="col-12 fa-3x container"><i class="fas fa-spinner fa-spin"></i></div></div></div>');
+	document.title = $("#title").text()+" - "+dest;
+	history.pushState({href: dest}, "", dest);
 	$.ajax({
 	  type: "POST",
 	  url: "/index.php",
@@ -119,7 +126,7 @@ function majlink(context)
 {
 	$('#'+context+' a').click(function(e) {
 		dest=$(this).attr('href');
-		if (!external.test(dest) && !javascript.test(dest)) 
+		if (!external.test(dest) && !javascript.test(dest) && textual.test(dest))
 		{
 			e.preventDefault();
 			openlink(dest,true);
