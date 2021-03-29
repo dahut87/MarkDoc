@@ -45,7 +45,7 @@ define('ACCESS_IP', '');
 define('HISTORY_FILE', 'history.txt');
 define('MAX_HISTORY_FILES', 5);
 define('LANG', 'en');
-define('ACCESS_PRIVATE', 'en');
+define('ACCESS_PRIVATE', 'false');
 ```
 
 **NOTE**:
