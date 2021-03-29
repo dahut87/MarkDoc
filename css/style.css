@@ -257,4 +257,18 @@ flex-wrap: wrap;
 {
     padding-bottom: 25px;
     padding-top: 10px;
+    background: white;
 }
+
+#j1_1 
+{
+        position: fixed;
+}
+
+@media (max-width: 767px) {
+    #j1_1 {
+        position: relative;
+	  margin-bottom: 50px;
+    }
+}
+
