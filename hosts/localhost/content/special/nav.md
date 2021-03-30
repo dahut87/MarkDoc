@@ -1,3 +1,3 @@
 [Home](/index.md)
-[Sitemap](:SITEMAP)
-[Glossary](:GLOSSAIRE)
+[Sitemap](/:SITEMAP)
+[Glossary](/:GLOSSAIRE)

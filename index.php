@@ -85,7 +85,7 @@ else if (isset($_POST['action']))
 					print('{ "id" : "id1", "icon" : "fas fa-atlas", "parent" : "#", "text" : "'.$_SERVER["SERVER_NAME"].'" }');
 					exit;
 				default:
-					$content=specialurl(":ADMIN",true);
+					$content=specialurl("/:ADMIN",true);
 			}
 	}
 	switch ($_POST['action']) 
@@ -98,7 +98,7 @@ else if (isset($_POST['action']))
 			exit;
 		case 'open':
 			$file=urldecode($_POST['file']);
-			if (substr($file,0,1)==":") 
+			if (substr($file,0,2)=="/:") 
 				specialurl($file,true);
 			else
 			{
@@ -128,9 +128,9 @@ else if (isset($_POST['action']))
 }
 else if (ACCESS_PRIVATE && !isset($_SESSION['md_admin']))
 {
-	$content=specialurl(":ADMIN",false);
+	$content=specialurl("/:ADMIN",false);
 } 
-else if (substr($file,0,1)==":")
+else if (substr($file,0,2)=="/:")
 {
     $content=specialurl($file,false);
 }
@@ -195,11 +195,11 @@ else
 print(($_SESSION['md_admin'] == true)?'<li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">'.$LANG['ADMIN'].'</a>
               <div class="dropdown-menu">
-		<a class="dropdown-item" href=":CONFIG">'.$LANG['CONFIG'].'</a>
-		<a class="dropdown-item" href=":PASSWORD">'.$LANG['PASSWORD'].'</a>
+		<a class="dropdown-item" href="/:CONFIG">'.$LANG['CONFIG'].'</a>
+		<a class="dropdown-item" href="/:PASSWORD">'.$LANG['PASSWORD'].'</a>
 		<hr>
 		<a class="dropdown-item" href="https://'.$_SERVER['SERVER_NAME'].'?logout">'.$LANG['LOGOUT'].'</a>
-      </div></li>':'<li class="nav-item"><a class="nav-link " href=":ADMIN">'.$LANG['ADMIN'].'</a></li>');
+      </div></li>':'<li class="nav-item"><a class="nav-link " href="/:ADMIN">'.$LANG['ADMIN'].'</a></li>');
 ?>
             <li class="nav-item"><a class="nav-link " href="<?php print($LANG['ABOUTMD'].'">'.$LANG['ABOUT']); ?></a></li>
           </ul>

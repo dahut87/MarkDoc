@@ -55,22 +55,22 @@ function specialurl($url,$quit)
     global $LANG;
     switch ($url) 
     {
-        case ':APROPOS':
+        case '/:APROPOS':
  	 	    $extra = new ParsedownExtraplus();
             $content=$extra->text($LANG['ABOUTMARKDOC']);
             break;
-        case ':ADMIN':
+        case '/:ADMIN':
             if (isset($_SESSION['md_admin']) === false || $_SESSION['md_admin'] !== true) 
                     $content = '<form method="post"><div style="text-align:center"><h1></h1>' . (isset($error) ? '<p style="color:#dd0000">' . $error . '</p>' : null) . '<input id="mdsimple_password" name="md_password" type="password" value="" placeholder="Password&hellip;" tabindex="1"><br><br><input type="hidden" id="action" name="action" value="ident"><input type="submit" value="'.$LANG['LOGIN'].'" tabindex="2"></div></form><script type="text/javascript">$("#md_password").focus();</script>';
             else
                 $content = '<h1>'.$LANG['ALREADYLOG'].'</h1>'; 
             break;      	
-        case ':SITEMAP':
+        case '/:SITEMAP':
             $content='<h1>'.$LANG['SITEMAP'].'</h1>';
             foreach(plan(CONTENT_DIR) as $file)
                 $content.='<p class="fileletter"><a href="'.$file.'">'.$file.'</a></p>'	;
             break;
-        case ':GLOSSAIRE':
+        case '/:GLOSSAIRE':
             $content='<h1>'.$LANG['GLOSSARY'].'</h1>';
             foreach(glossary(CONTENT_DIR) as $letter => $files)
             {

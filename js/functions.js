@@ -10,6 +10,7 @@
 var external = RegExp('^((f|ht)tps?:)?//');
 var javascript = RegExp('^javascript:');
 var textual = RegExp('\.md$');
+var internal = RegExp('^\/:');
 var emoji;
 var LANG;
 $(function(){
@@ -126,7 +127,7 @@ function majlink(context)
 {
 	$('#'+context+' a').click(function(e) {
 		dest=$(this).attr('href');
-		if (!external.test(dest) && !javascript.test(dest) && textual.test(dest))
+		if (!external.test(dest) && !javascript.test(dest) && (textual.test(dest) || internal.test(dest)))
 		{
 			e.preventDefault();
 			openlink(dest,true);
