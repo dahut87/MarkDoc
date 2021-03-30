@@ -300,6 +300,6 @@ function getnav()
 	 $a = new SimpleXMLElement($item);
 	 $data.='<a class="dropdown-item" href="'.$a['href'].'">'.$a[0].'</a>';
 	}
-	 $data.='<a class="dropdown-item" href=":APROPOS">'.$LANG['MARKDOC'].'</a>';
+	 $data.='<a class="dropdown-item" href="/:APROPOS">'.$LANG['MARKDOC'].'</a>';
 	return $data;
 }
