@@ -137,7 +137,8 @@ else if (isset($_POST['action']))
 		case 'sendfile':
 			$file=urldecode($_POST['name']);
 			$filedetail = pathinfo($file);
-			$data=$_POST['file'];
+			$data=file_get_contents($_FILES["file"]["tmp_name"]);
+			unlink($_FILES["file"]["tmp_name"]);
 			if (!isset($_SESSION['md_admin']))
 			{
 				$content=specialurl("/:ADMIN",true);

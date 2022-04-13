@@ -366,7 +366,6 @@ function sendmode(data)
 {
 	$(window).scrollTop(0);
 	$("#editor").hide();
-	if (data !== undefined) editor.value(data);
 	$("#content").show();
 	$("#save").hide();
 	$("#image").hide();
@@ -374,7 +373,7 @@ function sendmode(data)
 	$("#voir").val("Voir");
 	$("#content").html('<div id="drop-area"><form class="my-form"><p>'+LANG['UPLOAD_MSG']+'</p><input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)"><label class="button" for="fileElem">'+LANG['UPLOAD_BTN']+'</label></form><progress id="progress-bar" max=100 value=0></progress><div id="gallery" /></div></div>');
 	let dropArea = document.getElementById("drop-area")
-	dropArea.replaceWith(dropArea.cloneNode(true));
+	//dropArea.replaceWith(dropArea.cloneNode(true));
 				
 	;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
   		dropArea.addEventListener(eventName, preventDefaults, false)   
