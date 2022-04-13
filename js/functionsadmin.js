@@ -163,6 +163,7 @@ $(function(){
 	  success: function(data){
                data = data.split("|");
                alertBox(data[1], data[0]);
+ 		$("#files").jstree("refresh");
 	  },
 	  error: function(XMLHttpRequest, textStatus, errorThrown) {
 		alertBox(LANG['AJAXERROR'],'danger');
@@ -185,6 +186,7 @@ $(function(){
 	 			success: function(data){
                				data = data.split("|");
                				alertBox(data[1], data[0]);
+					$("#files").jstree("refresh");
 	  				},
 	  				error: function(XMLHttpRequest, textStatus, errorThrown) {
 						alertBox(LANG['AJAXERROR'],'danger');
@@ -213,6 +215,7 @@ $(function(){
 	 			success: function(data){
                				data = data.split("|");
                				alertBox(data[1], data[0]);
+					$("#files").jstree("refresh");
 	  				},
 	  				error: function(XMLHttpRequest, textStatus, errorThrown) {
 						alertBox(LANG['AJAXERROR'],'danger');
