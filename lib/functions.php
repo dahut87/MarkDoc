@@ -59,16 +59,43 @@ function specialurl($url,$quit)
  	 	    $extra = new ParsedownExtraplus();
             $content=$extra->text($LANG['ABOUTMARKDOC']);
             break;
+        case '/:HOME':
+  	 	    $extra = new ParsedownExtraplus();
+            $file=getcontent($LANG['INDEXMD'],true, false);
+            $content=$extra->text($file);
+            break;
         case '/:ADMIN':
             if (isset($_SESSION['md_admin']) === false || $_SESSION['md_admin'] !== true) 
-                    $content = '<form method="post"><div style="text-align:center"><h1></h1>' . (isset($error) ? '<p style="color:#dd0000">' . $error . '</p>' : null) . '<input id="mdsimple_password" name="md_password" type="password" value="" placeholder="Password&hellip;" tabindex="1"><br><br><input type="hidden" id="action" name="action" value="ident"><input type="submit" value="'.$LANG['LOGIN'].'" tabindex="2"></div></form><script type="text/javascript">$("#md_password").focus();</script>';
+                    $content = '<form method="post" name="pass" id="pass"><div style="text-align:center"><h1></h1>' . (isset($error) ? '<p style="color:#dd0000">' . $error . '</p>' : null) . '<input id="mdsimple_password" name="md_password" type="password" value="" placeholder="Password&hellip;" tabindex="1"><br><br><input type="hidden" id="action" name="action" value="ident"><input type="submit" value="'.$LANG['LOGIN'].'" tabindex="2"></div></form>
+<script type="text/javascript">
+$("#md_password").focus()
+$("#pass").submit(function(event){
+    event.preventDefault();
+    var serializedData = $("#pass").serialize();
+    request = $.ajax({
+        url: "/index.php",
+        type: "post",
+        data: serializedData
+    });
+	request.done(function (response, textStatus, jqXHR){
+	window.location.reload();
+    });
+});
+</script>';
             else
                 $content = '<h1>'.$LANG['ALREADYLOG'].'</h1>'; 
             break;      	
         case '/:SITEMAP':
             $content='<h1>'.$LANG['SITEMAP'].'</h1>';
             foreach(plan(CONTENT_DIR) as $file)
-                $content.='<p class="fileletter"><a href="'.$file.'">'.$file.'</a></p>'	;
+	    {
+	       $ext=pathinfo($file);
+               if ($ext['dirname']=='.')
+		$final=$ext['filename'];
+               Else
+                 $final=$ext['dirname']."/".$ext['filename'];
+               $content.='<p class="fileletter"><a href="'.$file.'">'.$final.'</a></p>';
+             }
             break;
         case '/:GLOSSAIRE':
             $content='<h1>'.$LANG['GLOSSARY'].'</h1>';
@@ -76,7 +103,10 @@ function specialurl($url,$quit)
             {
                 $content.='<p class="letter">'.$letter.'</p>';
                 foreach($files as $file)
-                    $content.='<p class="fileletter"><a href="'.$file.'">'.$file.'</a></p>'	;
+                {
+	       	   $ext=pathinfo($file);
+                    $content.='<p class="fileletter"><a href="'.$file.'">'.$ext['filename'].'</a></p>';
+                }
             }
             break;
     }
@@ -94,15 +124,15 @@ function plan($path){
     $files = $matches = array();
     while($dir->valid()) 
     {
+	$dir->next();
         if (!$dir->isDot())
 	  {
 		$ext = pathinfo($dir->getSubPathName());
-	      if ($ext['extension']=="md")
+	      if ($ext['extension']=="md" && $ext['dirname']!='special')
             {
 			array_push($files,$dir->getSubPathName());
             }
         }
-        $dir->next();
     }
     ksort($files);
     return $files;
@@ -113,18 +143,18 @@ function glossary($path){
     $files = $matches = array();
     while($dir->valid()) 
     {
+        $dir->next();
         if (!$dir->isDot())
 	  {
 		$ext = pathinfo($dir->getSubPathName());
-	      if ($ext['extension']=="md")
+	      if ($ext['extension']=="md"  && $ext['dirname']!='special')
             {
-			$letter=strtoupper(substr(basename($dir->getSubPathName()),0,1));
+			$letter=strtoupper(substr($ext['filename'],0,1));
 			if (!array_key_exists($letter,$files))
 		      	$files[$letter]=array();
 			array_push($files[$letter],$dir->getSubPathName());
             }
         }
-        $dir->next();
     }
     ksort($files);
     return $files;
@@ -200,6 +230,40 @@ function history($file)
     }
 }
 
+function delcontent($url)
+{
+    global $LANG;
+	$file = CONTENT_DIR.$url;
+	if (is_writable($file))
+	{
+            history($file);
+            unlink($file);
+            $content='success|'.$LANG['DELETED'];
+	}
+	else if (!is_writable($file))
+		$content='danger|'.$LANG['PROTECTED'];
+	else
+		$content='danger|'.$LANG['INDETERMINED'];
+	return $content;
+}
+
+function rencontent($url,$url2)
+{
+    global $LANG;
+	$file = CONTENT_DIR.$url;
+	$file2 = CONTENT_DIR.$url2;
+	if (is_writable($file))
+	{
+            history($file);
+            rename($file,$file2);
+            $content='success|'.$LANG['RENAMED'];
+	}
+	else if (!is_writable($file))
+		$content='danger|'.$LANG['PROTECTED'];
+	else
+		$content='danger|'.$LANG['INDETERMINED'];
+	return $content;
+}
 
 function setcontent($url,$data)
 {
@@ -247,13 +311,18 @@ function getcontent($url,$md=true,$header=false)
   	 return $content;
 }
 
+function sortByOption($a, $b) {
+   return strcmp($a['text'], $b['text']);
+}
+
 function filesJSON($path,$all,$first=true)
 {
     $alldata = array();
     $dir= new DirectoryIterator($path);
     foreach($dir as $node) 
     {
-        if (($node->getFilename() =="images") || ($node->getFilename() =="documents") || ($node->getFilename() =="special") || (SHOW_HIDDEN_FILES === false && substr($node->getFilename(), 0, 1) === '.') || (($node->getExtension() != VIEWABLE_FORMAT && $all==false) && $node->isFile())) continue;
+	if ( ($node->getFilename() == ".") || ($node->getFilename() == "..") ) continue;
+        if ( (!isset($_SESSION['md_admin'])) && (($node->getFilename() =="images") || ($node->getFilename() =="documents") || ($node->getFilename() =="special") || (SHOW_HIDDEN_FILES === false && substr($node->getFilename(), 0, 1) === '.') || ($node->getExtension() != VIEWABLE_FORMAT && $all==false && $node->isFile()))) continue;
         $data = array();
         if ( $node->isDir() && !$node->isDot() )
         {
@@ -282,10 +351,11 @@ function filesJSON($path,$all,$first=true)
         }
 	  $alldata[]=$data;
     }
-    if ($first)
-    	return  array('icon'=>"fas fa-atlas",'text'=>$_SERVER['SERVER_NAME'],'children'=>$alldata,'state' => array('opened'=>true));
+   usort($alldata, 'sortByOption');
+   if ($first)
+    	return  array('icon'=>"fas fa-atlas",'text'=>$_SERVER['SERVER_NAME'],'children'=>array_values($alldata),'state' => array('opened'=>true));
     else
-	return $alldata;
+	return array_values($alldata);
 }
 
 function getnav()

@@ -11,11 +11,13 @@
 5. Admin access logging
 6. Table of contents
 7. Password protected area
+8. Keeping the history of edited files and changes
+9. Uploading multiple files by drag and drop
+
+## In progress
+
+1. Complete File Manager
 
 ## Planned
 
-1. Complete File Manager
-3. Keeping the history of edited files and changes
-4. Configuration viewer
-5. Emoji menu in Markdown editor
-6. Uploading multiple files by drag and drop
+1. Emoji menu in Markdown editor

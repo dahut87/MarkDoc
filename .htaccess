@@ -1,7 +1,7 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteCond %{HTTPS} !=on
-RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+#RewriteCond %{HTTPS} !=on
+#RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index.php?doc=$1 [NC,L,QSA,R]

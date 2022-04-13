@@ -10,7 +10,6 @@
  */
 
 ### Global defines
-define('PRIVATE', true);
 define('ROOT_DIR', realpath(dirname(__FILE__)) .'/');
 define('LIB_DIR', ROOT_DIR.'lib/');
 define('HOST_DIR',ROOT_DIR.'hosts/'.$_SERVER['SERVER_NAME'].'/');
@@ -24,6 +23,7 @@ include LIB_DIR."/Parsedown.php";
 include LIB_DIR."/ParsedownExtra.php";
 include LIB_DIR."/ParsedownExtraPlus.php";
 include LIB_DIR."/functions.php";
+$supported_image = array('gif','jpg','jpeg','png','webp','bmp','svg','ico');
 
 ### Translations
 loadlang(LANGUAGE);
@@ -36,29 +36,34 @@ logprotect();
 ### Sessions
 session_name('markdoc');
 session_start();
+//echo "<br><br>";
+//var_dump($_POST);
+//var_dump($_GET);
 
-/*var_dump($_POST);
-var_dump($_GET);*/
-
-$file=explode('?', ($_GET['doc']=="")?"index.md":$_GET['doc'], 2)[0] ?? "";
+$file=explode('?', ($_GET['doc']=="")?$LANG['INDEXMD']:$_GET['doc'], 2)[0] ?? "";
 $filedetail = pathinfo($file);
-
 if (isset($_GET['logout'])) {
     unset($_SESSION['md_admin']);
+    unset($_SESSION['md_user']);
     redirect();
 }
 else if (isset($_POST['action']))
 {
-	if ((isset($_SESSION['md_admin']) === false || $_SESSION['md_admin'] !== true)) 
+	if ((isset($_SESSION['md_admin']) === false || $_SESSION['md_admin'] !== true) && (isset($_SESSION['md_user']) === false || $_SESSION['md_user'] !== true)) 
 	{
 		if ($_POST['action']=='ident')
 		{
 			if (isset($_POST['md_password']) && empty($_POST['md_password']) === false) 
 			{
-        			if (hash('sha512', $_POST['md_password']) === PASSWORD) 
+        			if (hash('sha512', $_POST['md_password']) === ADMIN_PASSWORD) 
 				{
             			$_SESSION['md_admin'] = true;
             			redirect();
+        			} 
+        			else if (hash('sha512', $_POST['md_password']) === USER_PASSWORD) 
+				{
+            			$_SESSION['md_user'] = true;
+            			redirect($file);
         			} 
 				else 
 	  			{
@@ -93,32 +98,105 @@ else if (isset($_POST['action']))
 	  	case 'children':
 			print(json_encode(filesJSON(CONTENT_DIR,false)));
 			exit;
+		case 'new':
+			$file=urldecode($_POST['file']);
+			$filedetail = pathinfo($file);
+			if (!isset($_SESSION['md_admin']))
+			{
+				$content=specialurl("/:ADMIN",true);
+			}
+			else
+			{
+				setcontent($file,"## Titre");
+				print(getcontent($file,$md=$filedetail['extension']=='md',true));
+			}
+			exit;
+		case 'rename':
+			$file=urldecode($_POST['file']);
+			$file2=urldecode($_POST['file2']);
+			if (!isset($_SESSION['md_admin']))
+			{
+				$content=specialurl("/:ADMIN",true);
+			}
+			else
+			{
+				print(rencontent($file,$file2));
+			}
+			exit;
+		case 'delete':
+			$file=urldecode($_POST['file']);
+			if (!isset($_SESSION['md_admin']))
+			{
+				$content=specialurl("/:ADMIN",true);
+			}
+			else
+			{
+				print(delcontent($file));
+			}
+			exit;
+		case 'sendfile':
+			$file=urldecode($_POST['name']);
+			$filedetail = pathinfo($file);
+			$data=$_POST['file'];
+			if (!isset($_SESSION['md_admin']))
+			{
+				$content=specialurl("/:ADMIN",true);
+			}
+			else
+			{
+				if (in_array($filedetail['extension'], $supported_image))
+					$path="/images";
+				else
+					$path="/documents";	
+				print(setcontent($path."/".$file,$data));
+			}
+			exit;
 	  	case 'allchildren':
 			print(json_encode(filesJSON(CONTENT_DIR,true)));
 			exit;
 		case 'open':
 			$file=urldecode($_POST['file']);
+			$filedetail = pathinfo($file);
 			if (substr($file,0,2)=="/:") 
 				specialurl($file,true);
 			else
 			{
-				$md=strpos('.md',$file)>=0;
-				print(getcontent($file,$md,true));
+				if (ACCESS_LIMITED!="" && strpos($filedetail['dirname'],ACCESS_LIMITED)!==false && !isset($_SESSION['md_user']))
+				{
+					$content=specialurl("/:ADMIN",true);
+				}
+				print(getcontent($file,$md=$filedetail['extension']=='md',true));
 				exit;
 			}
         case 'realopen':
 			$file=urldecode($_POST['file']);
-			print(getcontent($file,false,true));
-            exit;
+			$filedetail = pathinfo($file);
+			if (ACCESS_LIMITED!="" && strpos($filedetail['dirname'],ACCESS_LIMITED)!==false && !isset($_SESSION['md_user']))
+			{
+				$content=specialurl("/:ADMIN",true);
+			}
+			else
+				print(getcontent($file,false,true));
+            		exit;
         case 'save':
 			$file=urldecode($_POST['file']);
-			print(setcontent($file,$_POST['data']));
+			$filedetail = pathinfo($file);
+			if (!isset($_SESSION['md_admin']))
+			{
+				$content=specialurl("/:ADMIN",true);
+			}
+			else
+				print(setcontent($file,$_POST['data']));
             exit;
         case 'search':
 			$results=searchstr(CONTENT_DIR,$_POST['search']);
 			$content=sprintf($LANG['FOUND'],$results['totalFiles']);
 			foreach($results['files'] as $key => $value)
-				$content.='<p class="filefound"><a href="'.$key.'">'.$key.'</a></p><p class="textfound">'.$value.'</p>';
+			{
+				$filedetail = pathinfo($key);
+				if (ACCESS_LIMITED=="" || strpos($filedetail['dirname'],ACCESS_LIMITED)===false || isset($_SESSION['md_user']))
+					$content.='<p class="filefound"><a href="'.$key.'">'.$key.'</a></p><p class="textfound">'.$value.'</p>';
+			}
 			if ($_POST['type']=="js") 
 			{
 				print($content);
@@ -130,10 +208,14 @@ else if (ACCESS_PRIVATE && !isset($_SESSION['md_admin']))
 {
 	$content=specialurl("/:ADMIN",false);
 } 
-else if (substr($file,0,2)=="/:")
+else if (substr($file,0,1)==":")
 {
-    $content=specialurl($file,false);
+    $content=specialurl("/".$file,false);
 }
+else if (ACCESS_LIMITED!="" && strpos($filedetail['dirname'],ACCESS_LIMITED)!==false && !isset($_SESSION['md_user']))
+{
+	$content=specialurl("/:ADMIN",false);
+} 
 else if ($filedetail['extension']=="md")
 {
    $content=getcontent($file);
@@ -173,11 +255,22 @@ else
 <?php print(($_SESSION['md_admin'] == true)?'<link rel="stylesheet" href="/css/codemirror.min.css" />':''); ?>
 </head>
 <body>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/popper.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/jstree.min.js"></script>
+<script type="text/javascript" src="/js/prism.js"></script>
+<script type="text/javascript" src="/js/emoji.min.js"></script>
+<script type="text/javascript" src="/js/toc.bundle.js"></script>
+<script type="text/javascript" src="/js/magnifik.js"></script>
+<script type="text/javascript">
+var LANG = <?php echo $JSLANG; ?>
+</script>
    <div id="title" style="display: none;"><?php echo TITLE; ?></div>
    <div id="head" class="">
    <span id="forkongithub"><a href="https://github.com/dahut87/MarkDoc"><?php print($LANG['FORK']); ?></a></span>
       <nav class="navbar fixed-top navbar-expand-md <?php print(($_SESSION['md_admin'] == true)?"navbar-custom":"bg-dark navbar-dark"); ?>">
-        <a class="navbar-brand" href="/index.md"><i class="fas <?php echo ICON; ?>"></i>&nbsp;<?php echo TITLE; ?></a>
+        <a class="navbar-brand" href="/<?php echo $LANG['ABOUTMD']; ?>"><i class="fas <?php echo ICON; ?>"></i>&nbsp;<?php echo TITLE; ?></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -205,7 +298,7 @@ print(($_SESSION['md_admin'] == true)?'<li class="nav-item dropdown">
           </ul>
           <form class="form-inline" id="form" name="form" action="/index.php" method="POST">
             <input type="hidden" id="action" name="action" value="search"/>
-		<?php print(($_SESSION['md_admin'] == true)?'<input class="btn btn-outline-light" my-2 my-sm-0" value="'.$LANG['VIEW'].'" name="voir" id="voir" type="submit"/>&nbsp;&nbsp;<input class="btn btn-outline-light" my-2 my-sm-0" value="'.$LANG['SAVE'].'" name="save" id="save" type="button"/>&nbsp;&nbsp;':''); ?>
+		<?php print(($_SESSION['md_admin'] == true)?'<input class="btn btn-outline-light" my-2 my-sm-0" value="'.$LANG['DELETE'].'" name="del" id="del" type="submit"/>&nbsp;&nbsp;<input class="btn btn-outline-light" my-2 my-sm-0" value="'.$LANG['RENAME'].'" name="ren" id="ren" type="submit"/>&nbsp;&nbsp;<input class="btn btn-outline-light" my-2 my-sm-0" value="'.$LANG['NEW'].'" name="nouveau" id="nouveau" type="submit"/>&nbsp;&nbsp;<input class="btn btn-outline-light" my-2 my-sm-0" value="'.$LANG['VIEW'].'" name="voir" id="voir" type="submit"/>&nbsp;&nbsp;<input class="btn btn-outline-light" my-2 my-sm-0" value="'.$LANG['SAVE'].'" name="save" id="save" type="button"/>&nbsp;&nbsp;':''); ?>
 		    <input class="btn <?php print(($_SESSION['md_admin'] == true)?"btn-outline-light":"btn-outline-info"); ?> my-2 my-sm-0" value="<?php print($LANG['TOC']); ?>" name="toc" id="toc" type="button" style="display: none;"/>&nbsp;&nbsp;
             <input class="form-control mr-sm-2" type="text" id="search" name="search"/>
             <input class="btn <?php print(($_SESSION['md_admin'] == true)?"btn-outline-light":"btn-outline-info"); ?> my-2 my-sm-0" value="<?php print($LANG['SEARCH']); ?>" name="submit" id="submit" type="submit"/>
@@ -235,17 +328,6 @@ print(($_SESSION['md_admin'] == true)?'<li class="nav-item dropdown">
 ?>
 </div>
 <div class="alert"></div>
-<script type="text/javascript" src="/js/jquery.min.js"></script>
-<script type="text/javascript" src="/js/popper.min.js"></script>
-<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/js/jstree.min.js"></script>
-<script type="text/javascript" src="/js/prism.js"></script>
-<script type="text/javascript" src="/js/emoji.min.js"></script>
-<script type="text/javascript" src="/js/toc.bundle.js"></script>
-<script type="text/javascript" src="/js/magnifik.js"></script>
-<script type="text/javascript">
-var LANG = <?php echo $JSLANG; ?>
-</script>
 <?php print(($_SESSION['md_admin'] == true)?'<link rel="stylesheet" href="/css/simplemde.min.css">
 <script src="/js/simplemde.min.js"></script>
 <script type="text/javascript" src="/js/functionsadmin.js"></script>':'<script type="text/javascript" src="/js/functions.js"></script>'); ?>

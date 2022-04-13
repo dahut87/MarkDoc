@@ -39,13 +39,16 @@ define('VIEWABLE_FORMAT', 'md');
 define('TITLE', 'Documentation');
 define('ICON', 'fa-book-open');
 define('ALLOWED_EXT','jpg,svg,gif,png,c,tgz,tar.gz,gz,tar,sql,ico');
-define('PASSWORD', '[sha512 encoded password]');
+define('ADMIN_PASSWORD', '[sha512 encoded password]');
 define('LOG_FILE', 'log.txt');
 define('ACCESS_IP', '');
 define('HISTORY_FILE', 'history.txt');
 define('MAX_HISTORY_FILES', 5);
-define('LANG', 'en');
+define('LANGUAGE', 'en');
 define('ACCESS_PRIVATE', 'false');
+define('ACCESS_LIMITED', ''); #A PATH WHERE USER PASSWORD IS NEEDED
+define('USER_PASSWORD', ''); #FOR A PATH LIMITED ACCESS
+define('IMAGE_EXT','jpg,svg,gif,png,webp');
 ```
 
 **NOTE**:

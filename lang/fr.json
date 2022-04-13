@@ -7,8 +7,12 @@
     "ABOUTMARKDOC" : "# MarkDoc\r\n\r\n**Syst\u00E8me de gestion de documents Mardown \u00E9crits en PHP, Gratuit &amp; OpenSource :heart_eyes: afin de facilement cr\u00E9er vos sites internet de documentation**\r\n    \r\nCe site est lourdement format\u00E9 au format Markdown !\r\n```\r\n  __  __            _    _____             \r\n |  \\\/  |          | |  |  __ \\            \r\n | \\  \/ | __ _ _ __| | _| |  | | ___   ___ \r\n | |\\\/| |\/ _` | '__| |\/ \/ |  | |\/ _ \\ \/ __|\r\n | |  | | (_| | |  |   <| |__| | (_) | (__ \r\n |_|  |_|\\__,_|_|  |_|\\_\\_____\/ \\___\/ \\___|\r\n```                                      \r\n    \r\n![gplV3](https:\/\/www.gnu.org\/graphics\/gplv3-127x51.png) Sous licence GPLv3 [Licence](\/special\/gpl-3.0.md) - *Sources t\u00E9l\u00E9chargeables sur [GitHub](https:\/\/github.com\/dahut87\/MarkDoc)*\r\n    \r\nBas\u00E9 sur Pheditor \"PHP file editor\" sous licence MIT\r\n \r\n*Merci \u00E0 Hamid Samak*\r\n    \r\nR\u00E9alis\u00E9 en 2020 par Nicolas H.\r\n    \r\n---\r\n    \r\nPour plus d'informations, visitez le site internet de d\u00E9monstration \u00E0 l'url suivante : [https:\/\/markdoc.palon.fr](https:\/\/markdoc.palon.fr)",
     "ADMIN" : "Admin",
     "ABOUT" : "A propos",
-    "ABOUTMD" : "apropos.md",
+    "ABOUTMD" : "A propos.md",
+    "INDEXMD" : "Accueil.md",
     "SEARCH" : "Chercher",
+    "DELETE" : "Supprimer",
+    "RENAME" : "Renommer",
+    "NEW" : "Nouveau",
     "VIEW" : "Voir",
     "TOC" : "TDM",
     "SAVE" : "Sauver",
@@ -31,6 +35,12 @@
     "FORK": "Fork moi sur GitHub",
     "CREATED": "Fichier créé.",
     "SAVED": "Fichier enregistré.",
+    "DELETED": "Fichier supprimé.",
+    "RENAMED": "Fichier renommé.",
     "PROTECTED": "Fichier protégé.",
-    "INDETERMINED": "Erreur indéterminée."
+    "INDETERMINED": "Erreur indéterminée.",
+    "CONFIRM_DEL" : "Etes vous sur de vouloir supprimer ce fichier ?",
+    "CONFIRM_REN" : "Etes vous sur de vouloir renommer ce fichier ?",
+    "UPLOAD_MSG" : "Télécharger de multiples fichier avec la fenêtre de dialogue ou en glissant déposant des fichier sur la zone de réception prévue à cet effet.",
+    "UPLOAD_BTN" : "Télécharger"
 }
