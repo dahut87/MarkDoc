@@ -1,3 +1,9 @@
+.video-js-style {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+}
+
 .navbar-custom {
     background-color: #ff5500;
 }

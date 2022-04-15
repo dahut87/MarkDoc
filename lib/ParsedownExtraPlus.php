@@ -115,34 +115,52 @@ class ParsedownExtraplus extends ParsedownExtra
             return;
         }
 
-        $Inline = array(
-            'extent' => $Link['extent'] + 1,
-            'element' => array(
-                'name' => 'img',
-                'attributes' => array(
-                    'src' => $Link['element']['attributes']['href'],
-                    'alt' => $Link['element']['text'],
-                ),
-            ),
-        );
+	if ($Link['element']['text']!="video")
+	{
+        	$Inline = array(
+            	'extent' => $Link['extent'] + 1,
+            	'element' => array(
+                	'name' => 'img',
+                	'attributes' => array(
+                    	'src' => $Link['element']['attributes']['href'],
+                    	'alt' => $Link['element']['text'],
+                	),
+            	    ),
+        	);
 
-        $modifier = explode('?', $Inline['element']['attributes']['src'], 2)[1] ?? "";
-        list($size,$align) = explode('-', $modifier, 2);
-	  $width = $height = 0;
-        if (preg_match('/^\d+x\d+$/', $size)) {
-            list($width, $height) = explode('x', $size);
-	  }
-        if (preg_match('/^\d+$/', $size)) {
-            $width = $size;
-	  }
-        if($width > 0) $Inline['element']['attributes']['width'] = $width;
-        if($height > 0) $Inline['element']['attributes']['height'] = $height;
-        if($align !="" ) $Inline['element']['attributes']['align'] = $align;
+        	$modifier = explode('?', $Inline['element']['attributes']['src'], 2)[1] ?? "";
+        	list($size,$align) = explode('-', $modifier, 2);
+		$width = $height = 0;
+        	if (preg_match('/^\d+x\d+$/', $size)) {
+            		list($width, $height) = explode('x', $size);
+	  	}
+        	if (preg_match('/^\d+$/', $size)) {
+            		$width = $size;
+	  	}
+        	if($width > 0) $Inline['element']['attributes']['width'] = $width;
+        	if($height > 0) $Inline['element']['attributes']['height'] = $height;
+        	if($align !="" ) $Inline['element']['attributes']['align'] = $align;
 
-        $Inline['element']['attributes'] += $Link['element']['attributes'];
+        	$Inline['element']['attributes'] += $Link['element']['attributes'];
 
-        unset($Inline['element']['attributes']['href']);
-
+        	unset($Inline['element']['attributes']['href']);
+	}
+	else
+	{
+        	$Inline = array(
+            	'extent' => $Link['extent'] + 1,
+            	'element' => array(
+                	'name' => 'video',
+                	'attributes' => array(
+                    	'src' => $Link['element']['attributes']['href'],
+			'id' => 'player',
+			'controls' => '',
+			'class' => 'v-vlite video-js-style',
+			'playsinline' => ''
+                	),
+            	    ),
+        	);
+	}
         return $Inline;
     }
 

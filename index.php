@@ -253,9 +253,14 @@ else
 <link rel="stylesheet" type="text/css" href="/css/emoji.css" />
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
 <link rel="stylesheet" type="text/css" href="/css/style.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/vlitejs@4.0.5/dist/plugins/subtitle.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/vlitejs@4.0.5/dist/vlite.min.css" />
 <?php print(($_SESSION['md_admin'] == true)?'<link rel="stylesheet" href="/css/codemirror.min.css" />':''); ?>
 </head>
 <body>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vlitejs@4.0.5/dist/plugins/subtitle.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vlitejs@4.0.5/dist/plugins/pip.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vlitejs@4.0.5/dist/vlite.min.js"></script>
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/popper.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
