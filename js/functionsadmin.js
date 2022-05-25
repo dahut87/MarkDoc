@@ -252,11 +252,13 @@ $(function(){
 
 	$("#files").on("select_node.jstree", function (e, nodes) { 
    		file="/"+$("#files").jstree("get_path",nodes.node,"/").replace(/^.+?[/]/, '');
-		if ($("#files").jstree("is_leaf",nodes.node))
+		if ($("#files").jstree("get_icon",nodes.node)!="far fa-folder")
+		{
 			openlink(file,false);
+		}
 		else
 		{
-			sendmode();
+			sendmode(file);
 		}
 	});
 
@@ -512,6 +514,7 @@ function handleDrop(e) {
   var dt = e.dataTransfer
   var files = dt.files
   handleFiles(files)
+  $("#files").jstree("refresh");
 }
 
 let uploadProgress = []
@@ -519,7 +522,6 @@ let uploadProgress = []
 function initializeProgress(numFiles) {
    document.getElementById("progress-bar").value = 0
   uploadProgress = []
-
   for(let i = numFiles; i > 0; i--) {
     uploadProgress.push(0)
   }
@@ -555,11 +557,9 @@ function uploadFile(file, i) {
   var formData = new FormData()
   xhr.open('POST', url, true)
   xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
-
   xhr.upload.addEventListener("progress", function(e) {
     updateProgress(i, (e.loaded * 100.0 / e.total) || 100)
   })
-
   xhr.addEventListener('readystatechange', function(e) {
     if (xhr.readyState == 4 && xhr.status == 200) {
       updateProgress(i, 100)
@@ -567,9 +567,10 @@ function uploadFile(file, i) {
     else if (xhr.readyState == 4 && xhr.status != 200) {
     }
   })
-
   formData.append('file', file)
-  formData.append('name', file.name);
+  node=$("#files").jstree("get_selected");
+  path="/"+$("#files").jstree("get_path",node,"/").replace(/^.+?[/]/, '');
+  formData.append('name', path+"/"+file.name);
   formData.append('action','sendfile');
   xhr.send(formData)
 }

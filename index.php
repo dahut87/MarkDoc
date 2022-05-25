@@ -136,7 +136,6 @@ else if (isset($_POST['action']))
 			exit;
 		case 'sendfile':
 			$file=urldecode($_POST['name']);
-			$filedetail = pathinfo($file);
 			$data=file_get_contents($_FILES["file"]["tmp_name"]);
 			unlink($_FILES["file"]["tmp_name"]);
 			if (!isset($_SESSION['md_admin']))
@@ -145,11 +144,7 @@ else if (isset($_POST['action']))
 			}
 			else
 			{
-				if (in_array($filedetail['extension'], $supported_image))
-					$path="/images";
-				else
-					$path="/documents";	
-				print(setcontent($path."/".$file,$data));
+				print(setcontent($file,$data));
 			}
 			exit;
 	  	case 'allchildren':
